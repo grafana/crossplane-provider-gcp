@@ -95,18 +95,8 @@ type TargetHTTPSProxyParameters struct {
 
 	// A reference to the UrlMap resource that defines the mapping from URL
 	// to the BackendService.
-	// +crossplane:generate:reference:type=github.com/upbound/provider-gcp/apis/compute/v1beta1.URLMap
-	// +crossplane:generate:reference:extractor=github.com/upbound/upjet/pkg/resource.ExtractResourceID()
-	// +kubebuilder:validation:Optional
-	URLMap *string `json:"urlMap,omitempty" tf:"url_map,omitempty"`
-
-	// Reference to a URLMap in compute to populate urlMap.
-	// +kubebuilder:validation:Optional
-	URLMapRef *v1.Reference `json:"urlMapRef,omitempty" tf:"-"`
-
-	// Selector for a URLMap in compute to populate urlMap.
-	// +kubebuilder:validation:Optional
-	URLMapSelector *v1.Selector `json:"urlMapSelector,omitempty" tf:"-"`
+	// +kubebuilder:validation:Required
+	URLMap *string `json:"urlMap" tf:"url_map,omitempty"`
 }
 
 // TargetHTTPSProxySpec defines the desired state of TargetHTTPSProxy

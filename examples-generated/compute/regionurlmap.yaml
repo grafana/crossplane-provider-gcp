@@ -8,94 +8,27 @@ metadata:
   name: regionurlmap
 spec:
   forProvider:
-    defaultServiceSelector:
-      matchLabels:
-        testing.upbound.io/example-name: home
+    defaultService: ${google_compute_region_backend_service.home.id}
     description: a description
     hostRule:
     - hosts:
       - mysite.com
       pathMatcher: allpaths
     pathMatcher:
-    - defaultServiceSelector:
-        matchLabels:
-          testing.upbound.io/example-name: home
+    - defaultService: ${google_compute_region_backend_service.home.id}
       name: allpaths
       pathRule:
       - paths:
         - /home
-        serviceSelector:
-          matchLabels:
-            testing.upbound.io/example-name: home
+        service: ${google_compute_region_backend_service.home.id}
       - paths:
         - /login
-        serviceSelector:
-          matchLabels:
-            testing.upbound.io/example-name: login
+        service: ${google_compute_region_backend_service.login.id}
     region: us-central1
     test:
     - host: hi.com
       path: /home
-      serviceSelector:
-        matchLabels:
-          testing.upbound.io/example-name: home
-
----
-
-apiVersion: compute.gcp.upbound.io/v1beta1
-kind: RegionBackendService
-metadata:
-  annotations:
-    meta.upbound.io/example-id: compute/v1beta1/regionurlmap
-  labels:
-    testing.upbound.io/example-name: home
-  name: home
-spec:
-  forProvider:
-    healthChecksRefs:
-    - name: default
-    loadBalancingScheme: INTERNAL_MANAGED
-    protocol: HTTP
-    region: us-central1
-    timeoutSec: 10
-
----
-
-apiVersion: compute.gcp.upbound.io/v1beta1
-kind: RegionBackendService
-metadata:
-  annotations:
-    meta.upbound.io/example-id: compute/v1beta1/regionurlmap
-  labels:
-    testing.upbound.io/example-name: login
-  name: login
-spec:
-  forProvider:
-    healthChecksRefs:
-    - name: default
-    loadBalancingScheme: INTERNAL_MANAGED
-    protocol: HTTP
-    region: us-central1
-    timeoutSec: 10
-
----
-
-apiVersion: compute.gcp.upbound.io/v1beta1
-kind: RegionHealthCheck
-metadata:
-  annotations:
-    meta.upbound.io/example-id: compute/v1beta1/regionurlmap
-  labels:
-    testing.upbound.io/example-name: default
-  name: default
-spec:
-  forProvider:
-    checkIntervalSec: 1
-    httpHealthCheck:
-    - port: 80
-      requestPath: /
-    region: us-central1
-    timeoutSec: 1
+      service: ${google_compute_region_backend_service.home.id}
 
 ---
 
