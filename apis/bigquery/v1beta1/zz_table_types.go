@@ -533,7 +533,7 @@ type TableObservation struct {
 
 	// If specified, configures time-based
 	// partitioning for this table. Structure is documented below.
-	TimePartitioning []TableTimePartitioningObservation `json:"timePartitioning,omitempty" tf:"time_partitioning,omitempty"`
+	TimePartitioning []TimePartitioningObservation `json:"timePartitioning,omitempty" tf:"time_partitioning,omitempty"`
 
 	// Describes the table type.
 	Type *string `json:"type,omitempty" tf:"type,omitempty"`
@@ -622,58 +622,12 @@ type TableParameters struct {
 	// If specified, configures time-based
 	// partitioning for this table. Structure is documented below.
 	// +kubebuilder:validation:Optional
-	TimePartitioning []TableTimePartitioningParameters `json:"timePartitioning,omitempty" tf:"time_partitioning,omitempty"`
+	TimePartitioning []TimePartitioningParameters `json:"timePartitioning,omitempty" tf:"time_partitioning,omitempty"`
 
 	// If specified, configures this table as a view.
 	// Structure is documented below.
 	// +kubebuilder:validation:Optional
 	View []TableViewParameters `json:"view,omitempty" tf:"view,omitempty"`
-}
-
-type TableTimePartitioningObservation struct {
-
-	// Number of milliseconds for which to keep the
-	// storage for a partition.
-	ExpirationMs *float64 `json:"expirationMs,omitempty" tf:"expiration_ms,omitempty"`
-
-	// The field used to determine how to create a time-based
-	// partition. If time-based partitioning is enabled without this value, the
-	// table is partitioned based on the load time.
-	Field *string `json:"field,omitempty" tf:"field,omitempty"`
-
-	// If set to true, queries over this table
-	// require a partition filter that can be used for partition elimination to be
-	// specified.
-	RequirePartitionFilter *bool `json:"requirePartitionFilter,omitempty" tf:"require_partition_filter,omitempty"`
-
-	// The supported types are DAY, HOUR, MONTH, and YEAR,
-	// which will generate one partition per day, hour, month, and year, respectively.
-	Type *string `json:"type,omitempty" tf:"type,omitempty"`
-}
-
-type TableTimePartitioningParameters struct {
-
-	// Number of milliseconds for which to keep the
-	// storage for a partition.
-	// +kubebuilder:validation:Optional
-	ExpirationMs *float64 `json:"expirationMs,omitempty" tf:"expiration_ms,omitempty"`
-
-	// The field used to determine how to create a time-based
-	// partition. If time-based partitioning is enabled without this value, the
-	// table is partitioned based on the load time.
-	// +kubebuilder:validation:Optional
-	Field *string `json:"field,omitempty" tf:"field,omitempty"`
-
-	// If set to true, queries over this table
-	// require a partition filter that can be used for partition elimination to be
-	// specified.
-	// +kubebuilder:validation:Optional
-	RequirePartitionFilter *bool `json:"requirePartitionFilter,omitempty" tf:"require_partition_filter,omitempty"`
-
-	// The supported types are DAY, HOUR, MONTH, and YEAR,
-	// which will generate one partition per day, hour, month, and year, respectively.
-	// +kubebuilder:validation:Required
-	Type *string `json:"type" tf:"type,omitempty"`
 }
 
 type TableViewObservation struct {
@@ -696,6 +650,52 @@ type TableViewParameters struct {
 	// The default value is true. If set to false, the view will use BigQuery's standard SQL.
 	// +kubebuilder:validation:Optional
 	UseLegacySQL *bool `json:"useLegacySql,omitempty" tf:"use_legacy_sql,omitempty"`
+}
+
+type TimePartitioningObservation struct {
+
+	// Number of milliseconds for which to keep the
+	// storage for a partition.
+	ExpirationMs *float64 `json:"expirationMs,omitempty" tf:"expiration_ms,omitempty"`
+
+	// The field used to determine how to create a time-based
+	// partition. If time-based partitioning is enabled without this value, the
+	// table is partitioned based on the load time.
+	Field *string `json:"field,omitempty" tf:"field,omitempty"`
+
+	// If set to true, queries over this table
+	// require a partition filter that can be used for partition elimination to be
+	// specified.
+	RequirePartitionFilter *bool `json:"requirePartitionFilter,omitempty" tf:"require_partition_filter,omitempty"`
+
+	// The supported types are DAY, HOUR, MONTH, and YEAR,
+	// which will generate one partition per day, hour, month, and year, respectively.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+}
+
+type TimePartitioningParameters struct {
+
+	// Number of milliseconds for which to keep the
+	// storage for a partition.
+	// +kubebuilder:validation:Optional
+	ExpirationMs *float64 `json:"expirationMs,omitempty" tf:"expiration_ms,omitempty"`
+
+	// The field used to determine how to create a time-based
+	// partition. If time-based partitioning is enabled without this value, the
+	// table is partitioned based on the load time.
+	// +kubebuilder:validation:Optional
+	Field *string `json:"field,omitempty" tf:"field,omitempty"`
+
+	// If set to true, queries over this table
+	// require a partition filter that can be used for partition elimination to be
+	// specified.
+	// +kubebuilder:validation:Optional
+	RequirePartitionFilter *bool `json:"requirePartitionFilter,omitempty" tf:"require_partition_filter,omitempty"`
+
+	// The supported types are DAY, HOUR, MONTH, and YEAR,
+	// which will generate one partition per day, hour, month, and year, respectively.
+	// +kubebuilder:validation:Required
+	Type *string `json:"type" tf:"type,omitempty"`
 }
 
 // TableSpec defines the desired state of Table
