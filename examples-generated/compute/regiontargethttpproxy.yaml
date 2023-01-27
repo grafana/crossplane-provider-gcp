@@ -16,41 +16,6 @@ spec:
 ---
 
 apiVersion: compute.gcp.upbound.io/v1beta1
-kind: RegionBackendService
-metadata:
-  annotations:
-    meta.upbound.io/example-id: compute/v1beta1/regiontargethttpproxy
-  labels:
-    testing.upbound.io/example-name: default
-  name: default
-spec:
-  forProvider:
-    healthChecksRefs:
-    - name: default
-    loadBalancingScheme: INTERNAL_MANAGED
-    protocol: HTTP
-    region: us-central1
-    timeoutSec: 10
-
----
-
-apiVersion: compute.gcp.upbound.io/v1beta1
-kind: RegionHealthCheck
-metadata:
-  annotations:
-    meta.upbound.io/example-id: compute/v1beta1/regiontargethttpproxy
-  labels:
-    testing.upbound.io/example-name: default
-  name: default
-spec:
-  forProvider:
-    httpHealthCheck:
-    - port: 80
-    region: us-central1
-
----
-
-apiVersion: compute.gcp.upbound.io/v1beta1
 kind: RegionURLMap
 metadata:
   annotations:
@@ -60,24 +25,18 @@ metadata:
   name: default
 spec:
   forProvider:
-    defaultServiceSelector:
-      matchLabels:
-        testing.upbound.io/example-name: default
+    defaultService: ${google_compute_region_backend_service.default.id}
     hostRule:
     - hosts:
       - mysite.com
       pathMatcher: allpaths
     pathMatcher:
-    - defaultServiceSelector:
-        matchLabels:
-          testing.upbound.io/example-name: default
+    - defaultService: ${google_compute_region_backend_service.default.id}
       name: allpaths
       pathRule:
       - paths:
         - /*
-        serviceSelector:
-          matchLabels:
-            testing.upbound.io/example-name: default
+        service: ${google_compute_region_backend_service.default.id}
     region: us-central1
 
 ---
