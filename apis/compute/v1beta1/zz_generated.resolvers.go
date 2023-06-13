@@ -21,10 +21,57 @@ import (
 	"context"
 	reference "github.com/crossplane/crossplane-runtime/pkg/reference"
 	errors "github.com/pkg/errors"
+	v1beta1 "github.com/upbound/provider-gcp/apis/cloudplatform/v1beta1"
 	common "github.com/upbound/provider-gcp/config/common"
+	compute "github.com/upbound/provider-gcp/config/compute"
 	resource "github.com/upbound/upjet/pkg/resource"
 	client "sigs.k8s.io/controller-runtime/pkg/client"
 )
+
+// ResolveReferences of this BackendService.
+func (mg *BackendService) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var rsp reference.ResolutionResponse
+	var mrsp reference.MultiResolutionResponse
+	var err error
+
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Backend); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Backend[i3].Group),
+			Extract:      compute.InstanceGroupExtractor(),
+			Reference:    mg.Spec.ForProvider.Backend[i3].GroupRef,
+			Selector:     mg.Spec.ForProvider.Backend[i3].GroupSelector,
+			To: reference.To{
+				List:    &InstanceGroupManagerList{},
+				Managed: &InstanceGroupManager{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.Backend[i3].Group")
+		}
+		mg.Spec.ForProvider.Backend[i3].Group = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.Backend[i3].GroupRef = rsp.ResolvedReference
+
+	}
+	mrsp, err = r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
+		CurrentValues: reference.FromPtrValues(mg.Spec.ForProvider.HealthChecks),
+		Extract:       common.SelfLinkExtractor(),
+		References:    mg.Spec.ForProvider.HealthChecksRefs,
+		Selector:      mg.Spec.ForProvider.HealthChecksSelector,
+		To: reference.To{
+			List:    &HealthCheckList{},
+			Managed: &HealthCheck{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.HealthChecks")
+	}
+	mg.Spec.ForProvider.HealthChecks = reference.ToPtrValues(mrsp.ResolvedValues)
+	mg.Spec.ForProvider.HealthChecksRefs = mrsp.ResolvedReferences
+
+	return nil
+}
 
 // ResolveReferences of this GlobalAddress.
 func (mg *GlobalAddress) ResolveReferences(ctx context.Context, c client.Reader) error {
@@ -126,6 +173,244 @@ func (mg *GlobalForwardingRule) ResolveReferences(ctx context.Context, c client.
 	return nil
 }
 
+// ResolveReferences of this InstanceGroupManager.
+func (mg *InstanceGroupManager) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var rsp reference.ResolutionResponse
+	var mrsp reference.MultiResolutionResponse
+	var err error
+
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.AutoHealingPolicies); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.AutoHealingPolicies[i3].HealthCheck),
+			Extract:      common.ExtractResourceID(),
+			Reference:    mg.Spec.ForProvider.AutoHealingPolicies[i3].HealthCheckRef,
+			Selector:     mg.Spec.ForProvider.AutoHealingPolicies[i3].HealthCheckSelector,
+			To: reference.To{
+				List:    &HealthCheckList{},
+				Managed: &HealthCheck{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.AutoHealingPolicies[i3].HealthCheck")
+		}
+		mg.Spec.ForProvider.AutoHealingPolicies[i3].HealthCheck = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.AutoHealingPolicies[i3].HealthCheckRef = rsp.ResolvedReference
+
+	}
+	mrsp, err = r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
+		CurrentValues: reference.FromPtrValues(mg.Spec.ForProvider.TargetPools),
+		Extract:       common.SelfLinkExtractor(),
+		References:    mg.Spec.ForProvider.TargetPoolsRefs,
+		Selector:      mg.Spec.ForProvider.TargetPoolsSelector,
+		To: reference.To{
+			List:    &TargetPoolList{},
+			Managed: &TargetPool{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.TargetPools")
+	}
+	mg.Spec.ForProvider.TargetPools = reference.ToPtrValues(mrsp.ResolvedValues)
+	mg.Spec.ForProvider.TargetPoolsRefs = mrsp.ResolvedReferences
+
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Version); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Version[i3].InstanceTemplate),
+			Extract:      common.ExtractResourceID(),
+			Reference:    mg.Spec.ForProvider.Version[i3].InstanceTemplateRef,
+			Selector:     mg.Spec.ForProvider.Version[i3].InstanceTemplateSelector,
+			To: reference.To{
+				List:    &InstanceTemplateList{},
+				Managed: &InstanceTemplate{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.Version[i3].InstanceTemplate")
+		}
+		mg.Spec.ForProvider.Version[i3].InstanceTemplate = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.Version[i3].InstanceTemplateRef = rsp.ResolvedReference
+
+	}
+
+	return nil
+}
+
+// ResolveReferences of this InstanceTemplate.
+func (mg *InstanceTemplate) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var rsp reference.ResolutionResponse
+	var err error
+
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.NetworkInterface); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.NetworkInterface[i3].Network),
+			Extract:      reference.ExternalName(),
+			Reference:    mg.Spec.ForProvider.NetworkInterface[i3].NetworkRef,
+			Selector:     mg.Spec.ForProvider.NetworkInterface[i3].NetworkSelector,
+			To: reference.To{
+				List:    &NetworkList{},
+				Managed: &Network{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.NetworkInterface[i3].Network")
+		}
+		mg.Spec.ForProvider.NetworkInterface[i3].Network = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.NetworkInterface[i3].NetworkRef = rsp.ResolvedReference
+
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.NetworkInterface); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.NetworkInterface[i3].Subnetwork),
+			Extract:      reference.ExternalName(),
+			Reference:    mg.Spec.ForProvider.NetworkInterface[i3].SubnetworkRef,
+			Selector:     mg.Spec.ForProvider.NetworkInterface[i3].SubnetworkSelector,
+			To: reference.To{
+				List:    &SubnetworkList{},
+				Managed: &Subnetwork{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.NetworkInterface[i3].Subnetwork")
+		}
+		mg.Spec.ForProvider.NetworkInterface[i3].Subnetwork = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.NetworkInterface[i3].SubnetworkRef = rsp.ResolvedReference
+
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.ServiceAccount); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.ServiceAccount[i3].Email),
+			Extract:      resource.ExtractParamPath("email", true),
+			Reference:    mg.Spec.ForProvider.ServiceAccount[i3].EmailRef,
+			Selector:     mg.Spec.ForProvider.ServiceAccount[i3].EmailSelector,
+			To: reference.To{
+				List:    &v1beta1.ServiceAccountList{},
+				Managed: &v1beta1.ServiceAccount{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.ServiceAccount[i3].Email")
+		}
+		mg.Spec.ForProvider.ServiceAccount[i3].Email = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.ServiceAccount[i3].EmailRef = rsp.ResolvedReference
+
+	}
+
+	return nil
+}
+
+// ResolveReferences of this RegionBackendService.
+func (mg *RegionBackendService) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var rsp reference.ResolutionResponse
+	var mrsp reference.MultiResolutionResponse
+	var err error
+
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Backend); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Backend[i3].Group),
+			Extract:      compute.InstanceGroupExtractor(),
+			Reference:    mg.Spec.ForProvider.Backend[i3].GroupRef,
+			Selector:     mg.Spec.ForProvider.Backend[i3].GroupSelector,
+			To: reference.To{
+				List:    &RegionInstanceGroupManagerList{},
+				Managed: &RegionInstanceGroupManager{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.Backend[i3].Group")
+		}
+		mg.Spec.ForProvider.Backend[i3].Group = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.Backend[i3].GroupRef = rsp.ResolvedReference
+
+	}
+	mrsp, err = r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
+		CurrentValues: reference.FromPtrValues(mg.Spec.ForProvider.HealthChecks),
+		Extract:       common.SelfLinkExtractor(),
+		References:    mg.Spec.ForProvider.HealthChecksRefs,
+		Selector:      mg.Spec.ForProvider.HealthChecksSelector,
+		To: reference.To{
+			List:    &RegionHealthCheckList{},
+			Managed: &RegionHealthCheck{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.HealthChecks")
+	}
+	mg.Spec.ForProvider.HealthChecks = reference.ToPtrValues(mrsp.ResolvedValues)
+	mg.Spec.ForProvider.HealthChecksRefs = mrsp.ResolvedReferences
+
+	return nil
+}
+
+// ResolveReferences of this RegionInstanceGroupManager.
+func (mg *RegionInstanceGroupManager) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var rsp reference.ResolutionResponse
+	var mrsp reference.MultiResolutionResponse
+	var err error
+
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.AutoHealingPolicies); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.AutoHealingPolicies[i3].HealthCheck),
+			Extract:      common.ExtractResourceID(),
+			Reference:    mg.Spec.ForProvider.AutoHealingPolicies[i3].HealthCheckRef,
+			Selector:     mg.Spec.ForProvider.AutoHealingPolicies[i3].HealthCheckSelector,
+			To: reference.To{
+				List:    &HealthCheckList{},
+				Managed: &HealthCheck{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.AutoHealingPolicies[i3].HealthCheck")
+		}
+		mg.Spec.ForProvider.AutoHealingPolicies[i3].HealthCheck = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.AutoHealingPolicies[i3].HealthCheckRef = rsp.ResolvedReference
+
+	}
+	mrsp, err = r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
+		CurrentValues: reference.FromPtrValues(mg.Spec.ForProvider.TargetPools),
+		Extract:       common.SelfLinkExtractor(),
+		References:    mg.Spec.ForProvider.TargetPoolsRefs,
+		Selector:      mg.Spec.ForProvider.TargetPoolsSelector,
+		To: reference.To{
+			List:    &TargetPoolList{},
+			Managed: &TargetPool{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.TargetPools")
+	}
+	mg.Spec.ForProvider.TargetPools = reference.ToPtrValues(mrsp.ResolvedValues)
+	mg.Spec.ForProvider.TargetPoolsRefs = mrsp.ResolvedReferences
+
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Version); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Version[i3].InstanceTemplate),
+			Extract:      common.ExtractResourceID(),
+			Reference:    mg.Spec.ForProvider.Version[i3].InstanceTemplateRef,
+			Selector:     mg.Spec.ForProvider.Version[i3].InstanceTemplateSelector,
+			To: reference.To{
+				List:    &InstanceTemplateList{},
+				Managed: &InstanceTemplate{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.Version[i3].InstanceTemplate")
+		}
+		mg.Spec.ForProvider.Version[i3].InstanceTemplate = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.Version[i3].InstanceTemplateRef = rsp.ResolvedReference
+
+	}
+
+	return nil
+}
+
 // ResolveReferences of this RegionTargetHTTPProxy.
 func (mg *RegionTargetHTTPProxy) ResolveReferences(ctx context.Context, c client.Reader) error {
 	r := reference.NewAPIResolver(c, mg)
@@ -195,6 +480,223 @@ func (mg *RegionTargetHTTPSProxy) ResolveReferences(ctx context.Context, c clien
 	return nil
 }
 
+// ResolveReferences of this RegionURLMap.
+func (mg *RegionURLMap) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var rsp reference.ResolutionResponse
+	var err error
+
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.DefaultRouteAction); i3++ {
+		for i4 := 0; i4 < len(mg.Spec.ForProvider.DefaultRouteAction[i3].RequestMirrorPolicy); i4++ {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.DefaultRouteAction[i3].RequestMirrorPolicy[i4].BackendService),
+				Extract:      resource.ExtractResourceID(),
+				Reference:    mg.Spec.ForProvider.DefaultRouteAction[i3].RequestMirrorPolicy[i4].BackendServiceRef,
+				Selector:     mg.Spec.ForProvider.DefaultRouteAction[i3].RequestMirrorPolicy[i4].BackendServiceSelector,
+				To: reference.To{
+					List:    &RegionBackendServiceList{},
+					Managed: &RegionBackendService{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.DefaultRouteAction[i3].RequestMirrorPolicy[i4].BackendService")
+			}
+			mg.Spec.ForProvider.DefaultRouteAction[i3].RequestMirrorPolicy[i4].BackendService = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.DefaultRouteAction[i3].RequestMirrorPolicy[i4].BackendServiceRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.DefaultRouteAction); i3++ {
+		for i4 := 0; i4 < len(mg.Spec.ForProvider.DefaultRouteAction[i3].WeightedBackendServices); i4++ {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.DefaultRouteAction[i3].WeightedBackendServices[i4].BackendService),
+				Extract:      resource.ExtractResourceID(),
+				Reference:    mg.Spec.ForProvider.DefaultRouteAction[i3].WeightedBackendServices[i4].BackendServiceRef,
+				Selector:     mg.Spec.ForProvider.DefaultRouteAction[i3].WeightedBackendServices[i4].BackendServiceSelector,
+				To: reference.To{
+					List:    &RegionBackendServiceList{},
+					Managed: &RegionBackendService{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.DefaultRouteAction[i3].WeightedBackendServices[i4].BackendService")
+			}
+			mg.Spec.ForProvider.DefaultRouteAction[i3].WeightedBackendServices[i4].BackendService = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.DefaultRouteAction[i3].WeightedBackendServices[i4].BackendServiceRef = rsp.ResolvedReference
+
+		}
+	}
+	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.DefaultService),
+		Extract:      resource.ExtractResourceID(),
+		Reference:    mg.Spec.ForProvider.DefaultServiceRef,
+		Selector:     mg.Spec.ForProvider.DefaultServiceSelector,
+		To: reference.To{
+			List:    &RegionBackendServiceList{},
+			Managed: &RegionBackendService{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.DefaultService")
+	}
+	mg.Spec.ForProvider.DefaultService = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.DefaultServiceRef = rsp.ResolvedReference
+
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.PathMatcher); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.PathMatcher[i3].DefaultService),
+			Extract:      resource.ExtractResourceID(),
+			Reference:    mg.Spec.ForProvider.PathMatcher[i3].DefaultServiceRef,
+			Selector:     mg.Spec.ForProvider.PathMatcher[i3].DefaultServiceSelector,
+			To: reference.To{
+				List:    &RegionBackendServiceList{},
+				Managed: &RegionBackendService{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.PathMatcher[i3].DefaultService")
+		}
+		mg.Spec.ForProvider.PathMatcher[i3].DefaultService = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.PathMatcher[i3].DefaultServiceRef = rsp.ResolvedReference
+
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.PathMatcher); i3++ {
+		for i4 := 0; i4 < len(mg.Spec.ForProvider.PathMatcher[i3].PathRule); i4++ {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction); i5++ {
+				for i6 := 0; i6 < len(mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].RequestMirrorPolicy); i6++ {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].RequestMirrorPolicy[i6].BackendService),
+						Extract:      resource.ExtractResourceID(),
+						Reference:    mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].RequestMirrorPolicy[i6].BackendServiceRef,
+						Selector:     mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].RequestMirrorPolicy[i6].BackendServiceSelector,
+						To: reference.To{
+							List:    &RegionBackendServiceList{},
+							Managed: &RegionBackendService{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].RequestMirrorPolicy[i6].BackendService")
+					}
+					mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].RequestMirrorPolicy[i6].BackendService = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].RequestMirrorPolicy[i6].BackendServiceRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.PathMatcher); i3++ {
+		for i4 := 0; i4 < len(mg.Spec.ForProvider.PathMatcher[i3].PathRule); i4++ {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction); i5++ {
+				for i6 := 0; i6 < len(mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].WeightedBackendServices); i6++ {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].WeightedBackendServices[i6].BackendService),
+						Extract:      resource.ExtractResourceID(),
+						Reference:    mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].WeightedBackendServices[i6].BackendServiceRef,
+						Selector:     mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].WeightedBackendServices[i6].BackendServiceSelector,
+						To: reference.To{
+							List:    &RegionBackendServiceList{},
+							Managed: &RegionBackendService{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].WeightedBackendServices[i6].BackendService")
+					}
+					mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].WeightedBackendServices[i6].BackendService = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].RouteAction[i5].WeightedBackendServices[i6].BackendServiceRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.PathMatcher); i3++ {
+		for i4 := 0; i4 < len(mg.Spec.ForProvider.PathMatcher[i3].PathRule); i4++ {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].Service),
+				Extract:      resource.ExtractResourceID(),
+				Reference:    mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].ServiceRef,
+				Selector:     mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].ServiceSelector,
+				To: reference.To{
+					List:    &RegionBackendServiceList{},
+					Managed: &RegionBackendService{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].Service")
+			}
+			mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].Service = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.PathMatcher[i3].PathRule[i4].ServiceRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.PathMatcher); i3++ {
+		for i4 := 0; i4 < len(mg.Spec.ForProvider.PathMatcher[i3].RouteRules); i4++ {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.PathMatcher[i3].RouteRules[i4].Service),
+				Extract:      resource.ExtractResourceID(),
+				Reference:    mg.Spec.ForProvider.PathMatcher[i3].RouteRules[i4].ServiceRef,
+				Selector:     mg.Spec.ForProvider.PathMatcher[i3].RouteRules[i4].ServiceSelector,
+				To: reference.To{
+					List:    &RegionBackendServiceList{},
+					Managed: &RegionBackendService{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.PathMatcher[i3].RouteRules[i4].Service")
+			}
+			mg.Spec.ForProvider.PathMatcher[i3].RouteRules[i4].Service = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.PathMatcher[i3].RouteRules[i4].ServiceRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Test); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Test[i3].Service),
+			Extract:      resource.ExtractResourceID(),
+			Reference:    mg.Spec.ForProvider.Test[i3].ServiceRef,
+			Selector:     mg.Spec.ForProvider.Test[i3].ServiceSelector,
+			To: reference.To{
+				List:    &RegionBackendServiceList{},
+				Managed: &RegionBackendService{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.Test[i3].Service")
+		}
+		mg.Spec.ForProvider.Test[i3].Service = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.Test[i3].ServiceRef = rsp.ResolvedReference
+
+	}
+
+	return nil
+}
+
+// ResolveReferences of this Subnetwork.
+func (mg *Subnetwork) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var rsp reference.ResolutionResponse
+	var err error
+
+	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Network),
+		Extract:      reference.ExternalName(),
+		Reference:    mg.Spec.ForProvider.NetworkRef,
+		Selector:     mg.Spec.ForProvider.NetworkSelector,
+		To: reference.To{
+			List:    &NetworkList{},
+			Managed: &Network{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.Network")
+	}
+	mg.Spec.ForProvider.Network = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.NetworkRef = rsp.ResolvedReference
+
+	return nil
+}
+
 // ResolveReferences of this TargetHTTPSProxy.
 func (mg *TargetHTTPSProxy) ResolveReferences(ctx context.Context, c client.Reader) error {
 	r := reference.NewAPIResolver(c, mg)
@@ -217,6 +719,32 @@ func (mg *TargetHTTPSProxy) ResolveReferences(ctx context.Context, c client.Read
 	}
 	mg.Spec.ForProvider.SSLCertificates = reference.ToPtrValues(mrsp.ResolvedValues)
 	mg.Spec.ForProvider.SSLCertificatesRefs = mrsp.ResolvedReferences
+
+	return nil
+}
+
+// ResolveReferences of this TargetPool.
+func (mg *TargetPool) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var mrsp reference.MultiResolutionResponse
+	var err error
+
+	mrsp, err = r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
+		CurrentValues: reference.FromPtrValues(mg.Spec.ForProvider.HealthChecks),
+		Extract:       reference.ExternalName(),
+		References:    mg.Spec.ForProvider.HealthChecksRefs,
+		Selector:      mg.Spec.ForProvider.HealthChecksSelector,
+		To: reference.To{
+			List:    &HTTPHealthCheckList{},
+			Managed: &HTTPHealthCheck{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.HealthChecks")
+	}
+	mg.Spec.ForProvider.HealthChecks = reference.ToPtrValues(mrsp.ResolvedValues)
+	mg.Spec.ForProvider.HealthChecksRefs = mrsp.ResolvedReferences
 
 	return nil
 }

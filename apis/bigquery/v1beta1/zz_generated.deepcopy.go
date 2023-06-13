@@ -488,6 +488,11 @@ func (in *DatasetObservation) DeepCopyInto(out *DatasetObservation) {
 		*out = new(float64)
 		**out = **in
 	}
+	if in.DefaultCollation != nil {
+		in, out := &in.DefaultCollation, &out.DefaultCollation
+		*out = new(string)
+		**out = **in
+	}
 	if in.DefaultEncryptionConfiguration != nil {
 		in, out := &in.DefaultEncryptionConfiguration, &out.DefaultEncryptionConfiguration
 		*out = make([]DefaultEncryptionConfigurationObservation, len(*in))
@@ -528,6 +533,11 @@ func (in *DatasetObservation) DeepCopyInto(out *DatasetObservation) {
 	if in.ID != nil {
 		in, out := &in.ID, &out.ID
 		*out = new(string)
+		**out = **in
+	}
+	if in.IsCaseInsensitive != nil {
+		in, out := &in.IsCaseInsensitive, &out.IsCaseInsensitive
+		*out = new(bool)
 		**out = **in
 	}
 	if in.Labels != nil {
@@ -592,6 +602,11 @@ func (in *DatasetParameters) DeepCopyInto(out *DatasetParameters) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.DefaultCollation != nil {
+		in, out := &in.DefaultCollation, &out.DefaultCollation
+		*out = new(string)
+		**out = **in
+	}
 	if in.DefaultEncryptionConfiguration != nil {
 		in, out := &in.DefaultEncryptionConfiguration, &out.DefaultEncryptionConfiguration
 		*out = make([]DefaultEncryptionConfigurationParameters, len(*in))
@@ -622,6 +637,11 @@ func (in *DatasetParameters) DeepCopyInto(out *DatasetParameters) {
 	if in.FriendlyName != nil {
 		in, out := &in.FriendlyName, &out.FriendlyName
 		*out = new(string)
+		**out = **in
+	}
+	if in.IsCaseInsensitive != nil {
+		in, out := &in.IsCaseInsensitive, &out.IsCaseInsensitive
+		*out = new(bool)
 		**out = **in
 	}
 	if in.Labels != nil {

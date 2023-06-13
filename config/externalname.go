@@ -145,7 +145,7 @@ var externalNameConfigs = map[string]config.ExternalName{
 	// Imported by using the following format: projects/{{project}}/regions/{{region}}/vpnGateways/{{name}}
 	"google_compute_ha_vpn_gateway": config.TemplatedStringAsIdentifier("name", "projects/{{ .setup.configuration.project }}/regions/{{ .parameters.region }}/vpnGateways/{{ .external_name }}"),
 	// Imported by using the following format: projects/{{project}}/global/healthChecks/{{name}}
-	"google_compute_health_check": config.TemplatedStringAsIdentifier("name", "projects/{{ .setup.configuration.project }}/global/healthChecks/{{ .external_name }}"),
+	"google_compute_health_check": config.TemplatedStringAsIdentifier("name", "projects/{{ .setup.configuration.project }}/global/hChecks/{{ .external_name }}"),
 	// Imported by using the following format: projects/{{project}}/global/httpHealthChecks/{{name}}
 	"google_compute_http_health_check": config.TemplatedStringAsIdentifier("name", "projects/{{ .setup.configuration.project }}/global/httpHealthChecks/{{ .external_name }}"),
 	// Imported by using the following format: projects/{{project}}/global/httpsHealthChecks/{{name}}
@@ -972,8 +972,19 @@ func init() {
 		"google_service_account_iam_member":            {},
 		"google_service_account_key":                   {},
 		"google_service_networking_peered_dns_domain":  {},
+		"google_compute_backend_service":               {},
+		"google_compute_region_backend_service":        {},
+		"google_compute_target_pool":                   {},
+		"google_compute_instance_template":             {},
+		"google_compute_instance_group_manager":        {},
+		"google_compute_region_instance_group_manager": {},
 		"google_compute_network":                       {},
+		"google_compute_subnetwork":                    {},
 		"google_compute_global_address":                {},
+		"google_compute_health_check":                  {},
+		"google_compute_http_health_check":             {},
+		"google_compute_https_health_check":            {},
+		"google_compute_region_health_check":           {},
 		"google_compute_region_target_http_proxy":      {},
 		"google_compute_region_url_map":                {},
 		"google_compute_region_ssl_certificate":        {},
@@ -983,6 +994,7 @@ func init() {
 		"google_compute_target_http_proxy":             {},
 		"google_compute_target_https_proxy":            {},
 		"google_dns_record_set":                        {},
+		"google_iap_web_backend_service_iam_member":    {},
 		"google_sql_database_instance":                 {},
 		"google_sql_database":                          {},
 		"google_sql_source_representation_instance":    {},

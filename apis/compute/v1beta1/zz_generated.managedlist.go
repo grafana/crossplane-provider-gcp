@@ -19,6 +19,15 @@ package v1beta1
 
 import resource "github.com/crossplane/crossplane-runtime/pkg/resource"
 
+// GetItems of this BackendServiceList.
+func (l *BackendServiceList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
 // GetItems of this GlobalAddressList.
 func (l *GlobalAddressList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
@@ -37,8 +46,80 @@ func (l *GlobalForwardingRuleList) GetItems() []resource.Managed {
 	return items
 }
 
+// GetItems of this HTTPHealthCheckList.
+func (l *HTTPHealthCheckList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
+// GetItems of this HTTPSHealthCheckList.
+func (l *HTTPSHealthCheckList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
+// GetItems of this HealthCheckList.
+func (l *HealthCheckList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
+// GetItems of this InstanceGroupManagerList.
+func (l *InstanceGroupManagerList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
+// GetItems of this InstanceTemplateList.
+func (l *InstanceTemplateList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
 // GetItems of this NetworkList.
 func (l *NetworkList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
+// GetItems of this RegionBackendServiceList.
+func (l *RegionBackendServiceList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
+// GetItems of this RegionHealthCheckList.
+func (l *RegionHealthCheckList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
+// GetItems of this RegionInstanceGroupManagerList.
+func (l *RegionInstanceGroupManagerList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
 	for i := range l.Items {
 		items[i] = &l.Items[i]
@@ -91,6 +172,15 @@ func (l *SSLCertificateList) GetItems() []resource.Managed {
 	return items
 }
 
+// GetItems of this SubnetworkList.
+func (l *SubnetworkList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
 // GetItems of this TargetHTTPProxyList.
 func (l *TargetHTTPProxyList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
@@ -102,6 +192,15 @@ func (l *TargetHTTPProxyList) GetItems() []resource.Managed {
 
 // GetItems of this TargetHTTPSProxyList.
 func (l *TargetHTTPSProxyList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
+// GetItems of this TargetPoolList.
+func (l *TargetPoolList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
 	for i := range l.Items {
 		items[i] = &l.Items[i]

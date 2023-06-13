@@ -1,0 +1,61 @@
+apiVersion: compute.gcp.upbound.io/v1beta1
+kind: InstanceTemplate
+metadata:
+  annotations:
+    meta.upbound.io/example-id: compute/v1beta1/instancetemplate
+  labels:
+    testing.upbound.io/example-name: default
+  name: default
+spec:
+  forProvider:
+    canIpForward: false
+    description: This template is used to create app server instances.
+    disk:
+    - autoDelete: true
+      boot: true
+      resourcePolicies:
+      - ${google_compute_resource_policy.daily_backup.id}
+      sourceImage: debian-cloud/debian-11
+    - autoDelete: false
+      boot: false
+      source: ${google_compute_disk.foobar.name}
+    instanceDescription: description assigned to instances
+    labels:
+      environment: dev
+    machineType: e2-medium
+    metadata:
+      foo: bar
+    name: appserver-template
+    networkInterface:
+    - networkSelector:
+        matchLabels:
+          testing.upbound.io/example-name: example
+    scheduling:
+    - automaticRestart: true
+      onHostMaintenance: MIGRATE
+    serviceAccount:
+    - emailSelector:
+        matchLabels:
+          testing.upbound.io/example-name: default
+      scopes:
+      - cloud-platform
+    tags:
+    - foo
+    - bar
+
+---
+
+apiVersion: cloudplatform.gcp.upbound.io/v1beta1
+kind: ServiceAccount
+metadata:
+  annotations:
+    meta.upbound.io/example-id: compute/v1beta1/instancetemplate
+  labels:
+    testing.upbound.io/example-name: default
+  name: default
+spec:
+  forProvider:
+    displayName: Service Account
+
+---
+

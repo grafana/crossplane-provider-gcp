@@ -26,6 +26,7 @@ import (
 	v1beta1cloudplatform "github.com/upbound/provider-gcp/apis/cloudplatform/v1beta1"
 	v1beta1compute "github.com/upbound/provider-gcp/apis/compute/v1beta1"
 	v1beta1dns "github.com/upbound/provider-gcp/apis/dns/v1beta1"
+	v1beta1iap "github.com/upbound/provider-gcp/apis/iap/v1beta1"
 	v1beta1sql "github.com/upbound/provider-gcp/apis/sql/v1beta1"
 	v1beta1storage "github.com/upbound/provider-gcp/apis/storage/v1beta1"
 	v1alpha1 "github.com/upbound/provider-gcp/apis/v1alpha1"
@@ -39,6 +40,7 @@ func init() {
 		v1beta1cloudplatform.SchemeBuilder.AddToScheme,
 		v1beta1compute.SchemeBuilder.AddToScheme,
 		v1beta1dns.SchemeBuilder.AddToScheme,
+		v1beta1iap.SchemeBuilder.AddToScheme,
 		v1beta1sql.SchemeBuilder.AddToScheme,
 		v1beta1storage.SchemeBuilder.AddToScheme,
 		v1alpha1.SchemeBuilder.AddToScheme,

@@ -40,16 +40,31 @@ type ActiveDirectoryConfigParameters struct {
 	Domain *string `json:"domain" tf:"domain,omitempty"`
 }
 
+type AdvancedMachineFeaturesObservation struct {
+
+	// The number of threads per core. The value of this flag can be 1 or 2. To disable SMT, set this flag to 1. Only available in Cloud SQL for SQL Server instances. See smt for more details.
+	ThreadsPerCore *float64 `json:"threadsPerCore,omitempty" tf:"threads_per_core,omitempty"`
+}
+
+type AdvancedMachineFeaturesParameters struct {
+
+	// The number of threads per core. The value of this flag can be 1 or 2. To disable SMT, set this flag to 1. Only available in Cloud SQL for SQL Server instances. See smt for more details.
+	// +kubebuilder:validation:Optional
+	ThreadsPerCore *float64 `json:"threadsPerCore,omitempty" tf:"threads_per_core,omitempty"`
+}
+
 type AuthorizedNetworksObservation struct {
 
 	// The RFC 3339
 	// formatted date time string indicating when this whitelist expires.
 	ExpirationTime *string `json:"expirationTime,omitempty" tf:"expiration_time,omitempty"`
 
-	// Name of the flag.
+	// A name for this whitelist entry.
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
-	// Value of the flag.
+	// A CIDR notation IPv4 or IPv6 address that is allowed to
+	// access this instance. Must be set even if other two attributes are not for
+	// the whitelist to become active.
 	Value *string `json:"value,omitempty" tf:"value,omitempty"`
 }
 
@@ -60,11 +75,13 @@ type AuthorizedNetworksParameters struct {
 	// +kubebuilder:validation:Optional
 	ExpirationTime *string `json:"expirationTime,omitempty" tf:"expiration_time,omitempty"`
 
-	// Name of the flag.
+	// A name for this whitelist entry.
 	// +kubebuilder:validation:Optional
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
-	// Value of the flag.
+	// A CIDR notation IPv4 or IPv6 address that is allowed to
+	// access this instance. Must be set even if other two attributes are not for
+	// the whitelist to become active.
 	// +kubebuilder:validation:Required
 	Value *string `json:"value" tf:"value,omitempty"`
 }
@@ -155,6 +172,9 @@ type CloneObservation struct {
 	// The name of the allocated ip range for the private ip CloudSQL instance. For example: "google-managed-services-default". If set, the cloned instance ip will be created in the allocated range. The range name must comply with RFC 1035. Specifically, the name must be 1-63 characters long and match the regular expression a-z?.
 	AllocatedIPRange *string `json:"allocatedIpRange,omitempty" tf:"allocated_ip_range,omitempty"`
 
+	// (SQL Server only, use with point_in_time) Clone only the specified databases from the source instance. Clone all databases if empty.
+	DatabaseNames []*string `json:"databaseNames,omitempty" tf:"database_names,omitempty"`
+
 	// The timestamp of the point in time that should be restored.
 	PointInTime *string `json:"pointInTime,omitempty" tf:"point_in_time,omitempty"`
 
@@ -168,6 +188,10 @@ type CloneParameters struct {
 	// +kubebuilder:validation:Optional
 	AllocatedIPRange *string `json:"allocatedIpRange,omitempty" tf:"allocated_ip_range,omitempty"`
 
+	// (SQL Server only, use with point_in_time) Clone only the specified databases from the source instance. Clone all databases if empty.
+	// +kubebuilder:validation:Optional
+	DatabaseNames []*string `json:"databaseNames,omitempty" tf:"database_names,omitempty"`
+
 	// The timestamp of the point in time that should be restored.
 	// +kubebuilder:validation:Optional
 	PointInTime *string `json:"pointInTime,omitempty" tf:"point_in_time,omitempty"`
@@ -179,20 +203,24 @@ type CloneParameters struct {
 
 type DatabaseFlagsObservation struct {
 
-	// Name of the flag.
+	// A name for this whitelist entry.
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
-	// Value of the flag.
+	// A CIDR notation IPv4 or IPv6 address that is allowed to
+	// access this instance. Must be set even if other two attributes are not for
+	// the whitelist to become active.
 	Value *string `json:"value,omitempty" tf:"value,omitempty"`
 }
 
 type DatabaseFlagsParameters struct {
 
-	// Name of the flag.
+	// A name for this whitelist entry.
 	// +kubebuilder:validation:Required
 	Name *string `json:"name" tf:"name,omitempty"`
 
-	// Value of the flag.
+	// A CIDR notation IPv4 or IPv6 address that is allowed to
+	// access this instance. Must be set even if other two attributes are not for
+	// the whitelist to become active.
 	// +kubebuilder:validation:Required
 	Value *string `json:"value" tf:"value,omitempty"`
 }
@@ -480,7 +508,7 @@ type InsightsConfigObservation struct {
 	// Number of query execution plans captured by Insights per minute for all queries combined. Between 0 and 20. Default to 5.
 	QueryPlansPerMinute *float64 `json:"queryPlansPerMinute,omitempty" tf:"query_plans_per_minute,omitempty"`
 
-	// Maximum query length stored in bytes. Between 256 and 4500. Default to 1024.
+	// Maximum query length stored in bytes. Between 256 and 4500. Default to 1024. Higher query lengths are more useful for analytical queries, but they also require more memory. Changing the query length requires you to restart the instance. You can still add tags to queries that exceed the length limit.
 	QueryStringLength *float64 `json:"queryStringLength,omitempty" tf:"query_string_length,omitempty"`
 
 	// True if Query Insights will record application tags from query when enabled.
@@ -500,7 +528,7 @@ type InsightsConfigParameters struct {
 	// +kubebuilder:validation:Optional
 	QueryPlansPerMinute *float64 `json:"queryPlansPerMinute,omitempty" tf:"query_plans_per_minute,omitempty"`
 
-	// Maximum query length stored in bytes. Between 256 and 4500. Default to 1024.
+	// Maximum query length stored in bytes. Between 256 and 4500. Default to 1024. Higher query lengths are more useful for analytical queries, but they also require more memory. Changing the query length requires you to restart the instance. You can still add tags to queries that exceed the length limit.
 	// +kubebuilder:validation:Optional
 	QueryStringLength *float64 `json:"queryStringLength,omitempty" tf:"query_string_length,omitempty"`
 
@@ -805,6 +833,8 @@ type SettingsObservation struct {
 
 	ActiveDirectoryConfig []ActiveDirectoryConfigObservation `json:"activeDirectoryConfig,omitempty" tf:"active_directory_config,omitempty"`
 
+	AdvancedMachineFeatures []AdvancedMachineFeaturesObservation `json:"advancedMachineFeatures,omitempty" tf:"advanced_machine_features,omitempty"`
+
 	// The availability type of the Cloud SQL
 	// instance, high availability (REGIONAL) or single zone (ZONAL).' For all instances, ensure that
 	// settings.backup_configuration.enabled is set to true.
@@ -880,6 +910,9 @@ type SettingsParameters struct {
 
 	// +kubebuilder:validation:Optional
 	ActiveDirectoryConfig []ActiveDirectoryConfigParameters `json:"activeDirectoryConfig,omitempty" tf:"active_directory_config,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	AdvancedMachineFeatures []AdvancedMachineFeaturesParameters `json:"advancedMachineFeatures,omitempty" tf:"advanced_machine_features,omitempty"`
 
 	// The availability type of the Cloud SQL
 	// instance, high availability (REGIONAL) or single zone (ZONAL).' For all instances, ensure that
