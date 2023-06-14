@@ -130,7 +130,7 @@ type SubnetworkLogConfigParameters struct {
 	MetadataFields []*string `json:"metadataFields,omitempty" tf:"metadata_fields,omitempty"`
 }
 
-type SubnetworkObservation_2 struct {
+type SubnetworkObservation struct {
 
 	// Creation timestamp in RFC3339 text format.
 	CreationTimestamp *string `json:"creationTimestamp,omitempty" tf:"creation_timestamp,omitempty"`
@@ -227,7 +227,7 @@ type SubnetworkObservation_2 struct {
 	StackType *string `json:"stackType,omitempty" tf:"stack_type,omitempty"`
 }
 
-type SubnetworkParameters_2 struct {
+type SubnetworkParameters struct {
 
 	// An optional description of this resource. Provide this property when
 	// you create the resource. This field can be set only at resource
@@ -328,13 +328,13 @@ type SubnetworkParameters_2 struct {
 // SubnetworkSpec defines the desired state of Subnetwork
 type SubnetworkSpec struct {
 	v1.ResourceSpec `json:",inline"`
-	ForProvider     SubnetworkParameters_2 `json:"forProvider"`
+	ForProvider     SubnetworkParameters `json:"forProvider"`
 }
 
 // SubnetworkStatus defines the observed state of Subnetwork.
 type SubnetworkStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        SubnetworkObservation_2 `json:"atProvider,omitempty"`
+	AtProvider        SubnetworkObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

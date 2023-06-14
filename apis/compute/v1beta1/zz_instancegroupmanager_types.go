@@ -57,26 +57,6 @@ type AutoHealingPoliciesParameters struct {
 	InitialDelaySec *float64 `json:"initialDelaySec" tf:"initial_delay_sec,omitempty"`
 }
 
-type InstanceGroupManagerNamedPortObservation struct {
-
-	// The name of the port.
-	Name *string `json:"name,omitempty" tf:"name,omitempty"`
-
-	// The port number.
-	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
-}
-
-type InstanceGroupManagerNamedPortParameters struct {
-
-	// The name of the port.
-	// +kubebuilder:validation:Required
-	Name *string `json:"name" tf:"name,omitempty"`
-
-	// The port number.
-	// +kubebuilder:validation:Required
-	Port *float64 `json:"port" tf:"port,omitempty"`
-}
-
 type InstanceGroupManagerObservation struct {
 
 	// The autohealing policies for this managed instance
@@ -114,7 +94,7 @@ type InstanceGroupManagerObservation struct {
 
 	// The named port configuration. See the section below
 	// for details on configuration.
-	NamedPort []InstanceGroupManagerNamedPortObservation `json:"namedPort,omitempty" tf:"named_port,omitempty"`
+	NamedPort []NamedPortObservation `json:"namedPort,omitempty" tf:"named_port,omitempty"`
 
 	Operation *string `json:"operation,omitempty" tf:"operation,omitempty"`
 
@@ -197,7 +177,7 @@ type InstanceGroupManagerParameters struct {
 	// The named port configuration. See the section below
 	// for details on configuration.
 	// +kubebuilder:validation:Optional
-	NamedPort []InstanceGroupManagerNamedPortParameters `json:"namedPort,omitempty" tf:"named_port,omitempty"`
+	NamedPort []NamedPortParameters `json:"namedPort,omitempty" tf:"named_port,omitempty"`
 
 	// The ID of the project in which the resource belongs. If it
 	// is not provided, the provider project is used.
@@ -256,6 +236,26 @@ type InstanceGroupManagerParameters struct {
 	// in.
 	// +kubebuilder:validation:Required
 	Zone *string `json:"zone" tf:"zone,omitempty"`
+}
+
+type NamedPortObservation struct {
+
+	// The name of the port.
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// The port number.
+	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
+}
+
+type NamedPortParameters struct {
+
+	// The name of the port.
+	// +kubebuilder:validation:Required
+	Name *string `json:"name" tf:"name,omitempty"`
+
+	// The port number.
+	// +kubebuilder:validation:Required
+	Port *float64 `json:"port" tf:"port,omitempty"`
 }
 
 type PerInstanceConfigsObservation struct {
