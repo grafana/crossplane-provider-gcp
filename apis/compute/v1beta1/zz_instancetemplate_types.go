@@ -113,15 +113,22 @@ type AliasIPRangeParameters struct {
 
 type ConfidentialInstanceConfigObservation struct {
 
-	// Defines whether the instance should have confidential compute enabled. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM.
+	// Beta Defines the confidential computing technology the instance uses. SEV is an AMD feature. One of the following values: SEV, SEV_SNP. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM. If SEV_SNP, currently min_cpu_platform has to be set to "AMD Milan" or this will fail to create the VM.
+	ConfidentialInstanceType *string `json:"confidentialInstanceType,omitempty" tf:"confidential_instance_type,omitempty"`
+
+	// Defines whether the instance should have confidential compute enabled with AMD SEV. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM.
 	EnableConfidentialCompute *bool `json:"enableConfidentialCompute,omitempty" tf:"enable_confidential_compute,omitempty"`
 }
 
 type ConfidentialInstanceConfigParameters struct {
 
-	// Defines whether the instance should have confidential compute enabled. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM.
-	// +kubebuilder:validation:Required
-	EnableConfidentialCompute *bool `json:"enableConfidentialCompute" tf:"enable_confidential_compute,omitempty"`
+	// Beta Defines the confidential computing technology the instance uses. SEV is an AMD feature. One of the following values: SEV, SEV_SNP. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM. If SEV_SNP, currently min_cpu_platform has to be set to "AMD Milan" or this will fail to create the VM.
+	// +kubebuilder:validation:Optional
+	ConfidentialInstanceType *string `json:"confidentialInstanceType,omitempty" tf:"confidential_instance_type,omitempty"`
+
+	// Defines whether the instance should have confidential compute enabled with AMD SEV. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM.
+	// +kubebuilder:validation:Optional
+	EnableConfidentialCompute *bool `json:"enableConfidentialCompute,omitempty" tf:"enable_confidential_compute,omitempty"`
 }
 
 type DiskEncryptionKeyObservation struct {
@@ -183,6 +190,15 @@ type DiskObservation struct {
 	// or READ_ONLY. If you are attaching or creating a boot disk, this must
 	// read-write mode.
 	Mode *string `json:"mode,omitempty" tf:"mode,omitempty"`
+
+	// Indicates how many IOPS to provision for the disk. This
+	// sets the number of I/O operations per second that the disk can handle.
+	// Values must be between 10,000 and 120,000. For more details, see the
+	// Extreme persistent disk documentation.
+	ProvisionedIops *float64 `json:"provisionedIops,omitempty" tf:"provisioned_iops,omitempty"`
+
+	// A set of key/value resource manager tag pairs to bind to this disk. Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/456.
+	ResourceManagerTags map[string]*string `json:"resourceManagerTags,omitempty" tf:"resource_manager_tags,omitempty"`
 
 	// - A list (short name or id) of resource policies to attach to this disk for automatic snapshot creations. Currently a max of 1 resource policy is supported.
 	ResourcePolicies []*string `json:"resourcePolicies,omitempty" tf:"resource_policies,omitempty"`
@@ -275,6 +291,17 @@ type DiskParameters struct {
 	// +kubebuilder:validation:Optional
 	Mode *string `json:"mode,omitempty" tf:"mode,omitempty"`
 
+	// Indicates how many IOPS to provision for the disk. This
+	// sets the number of I/O operations per second that the disk can handle.
+	// Values must be between 10,000 and 120,000. For more details, see the
+	// Extreme persistent disk documentation.
+	// +kubebuilder:validation:Optional
+	ProvisionedIops *float64 `json:"provisionedIops,omitempty" tf:"provisioned_iops,omitempty"`
+
+	// A set of key/value resource manager tag pairs to bind to this disk. Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/456.
+	// +kubebuilder:validation:Optional
+	ResourceManagerTags map[string]*string `json:"resourceManagerTags,omitempty" tf:"resource_manager_tags,omitempty"`
+
 	// - A list (short name or id) of resource policies to attach to this disk for automatic snapshot creations. Currently a max of 1 resource policy is supported.
 	// +kubebuilder:validation:Optional
 	ResourcePolicies []*string `json:"resourcePolicies,omitempty" tf:"resource_policies,omitempty"`
@@ -343,6 +370,9 @@ type IPv6AccessConfigObservation struct {
 
 	ExternalIPv6PrefixLength *string `json:"externalIpv6PrefixLength,omitempty" tf:"external_ipv6_prefix_length,omitempty"`
 
+	// The name of the instance template.
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
 	// The service-level to be provided for IPv6 traffic when the
 	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
 	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
@@ -378,6 +408,12 @@ type InstanceTemplateObservation struct {
 	// This can be specified multiple times for multiple disks. Structure is
 	// documented below.
 	Disk []DiskObservation `json:"disk,omitempty" tf:"disk,omitempty"`
+
+	EffectiveLabels map[string]*string `json:"effectiveLabels,omitempty" tf:"effective_labels,omitempty"`
+
+	// Enable Virtual Displays on this instance.
+	// Note: allow_stopping_for_update must be set to true in order to update this field.
+	EnableDisplay *bool `json:"enableDisplay,omitempty" tf:"enable_display,omitempty"`
 
 	// List of the type and count of accelerator cards attached to the instance. Structure documented below.
 	GuestAccelerator []GuestAcceleratorObservation `json:"guestAccelerator,omitempty" tf:"guest_accelerator,omitempty"`
@@ -425,6 +461,10 @@ type InstanceTemplateObservation struct {
 	// Structure is documented below.
 	NetworkInterface []NetworkInterfaceObservation `json:"networkInterface,omitempty" tf:"network_interface,omitempty"`
 
+	// os-features, and network_interface.0.nic-type must be GVNIC
+	// in order for this setting to take effect.
+	NetworkPerformanceConfig []NetworkPerformanceConfigObservation `json:"networkPerformanceConfig,omitempty" tf:"network_performance_config,omitempty"`
+
 	// The ID of the project in which the resource belongs. If it
 	// is not provided, the provider project is used.
 	Project *string `json:"project,omitempty" tf:"project,omitempty"`
@@ -440,6 +480,9 @@ type InstanceTemplateObservation struct {
 	// Specifies the reservations that this instance can consume from.
 	// Structure is documented below.
 	ReservationAffinity []ReservationAffinityObservation `json:"reservationAffinity,omitempty" tf:"reservation_affinity,omitempty"`
+
+	// A set of key/value resource manager tag pairs to bind to the instances. Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/456.
+	ResourceManagerTags map[string]*string `json:"resourceManagerTags,omitempty" tf:"resource_manager_tags,omitempty"`
 
 	// - A list of self_links of resource policies to attach to the instance. Modifying this list will cause the instance to recreate. Currently a max of 1 resource policy is supported.
 	ResourcePolicies []*string `json:"resourcePolicies,omitempty" tf:"resource_policies,omitempty"`
@@ -467,6 +510,9 @@ type InstanceTemplateObservation struct {
 
 	// The unique fingerprint of the tags.
 	TagsFingerprint *string `json:"tagsFingerprint,omitempty" tf:"tags_fingerprint,omitempty"`
+
+	// The combination of labels configured directly on the resource and default labels configured on the provider.
+	TerraformLabels map[string]*string `json:"terraformLabels,omitempty" tf:"terraform_labels,omitempty"`
 }
 
 type InstanceTemplateParameters struct {
@@ -493,6 +539,11 @@ type InstanceTemplateParameters struct {
 	// documented below.
 	// +kubebuilder:validation:Optional
 	Disk []DiskParameters `json:"disk,omitempty" tf:"disk,omitempty"`
+
+	// Enable Virtual Displays on this instance.
+	// Note: allow_stopping_for_update must be set to true in order to update this field.
+	// +kubebuilder:validation:Optional
+	EnableDisplay *bool `json:"enableDisplay,omitempty" tf:"enable_display,omitempty"`
 
 	// List of the type and count of accelerator cards attached to the instance. Structure documented below.
 	// +kubebuilder:validation:Optional
@@ -544,6 +595,11 @@ type InstanceTemplateParameters struct {
 	// +kubebuilder:validation:Optional
 	NetworkInterface []NetworkInterfaceParameters `json:"networkInterface,omitempty" tf:"network_interface,omitempty"`
 
+	// os-features, and network_interface.0.nic-type must be GVNIC
+	// in order for this setting to take effect.
+	// +kubebuilder:validation:Optional
+	NetworkPerformanceConfig []NetworkPerformanceConfigParameters `json:"networkPerformanceConfig,omitempty" tf:"network_performance_config,omitempty"`
+
 	// The ID of the project in which the resource belongs. If it
 	// is not provided, the provider project is used.
 	// +kubebuilder:validation:Optional
@@ -562,6 +618,10 @@ type InstanceTemplateParameters struct {
 	// Structure is documented below.
 	// +kubebuilder:validation:Optional
 	ReservationAffinity []ReservationAffinityParameters `json:"reservationAffinity,omitempty" tf:"reservation_affinity,omitempty"`
+
+	// A set of key/value resource manager tag pairs to bind to the instances. Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/456.
+	// +kubebuilder:validation:Optional
+	ResourceManagerTags map[string]*string `json:"resourceManagerTags,omitempty" tf:"resource_manager_tags,omitempty"`
 
 	// - A list of self_links of resource policies to attach to the instance. Modifying this list will cause the instance to recreate. Currently a max of 1 resource policy is supported.
 	// +kubebuilder:validation:Optional
@@ -586,6 +646,66 @@ type InstanceTemplateParameters struct {
 	Tags []*string `json:"tags,omitempty" tf:"tags,omitempty"`
 }
 
+type LocalSsdRecoveryTimeoutObservation struct {
+
+	// Span of time that's a fraction of a second at nanosecond
+	// resolution. Durations less than one second are represented with a 0
+	// seconds field and a positive nanos field. Must be from 0 to
+	// 999,999,999 inclusive.
+	Nanos *float64 `json:"nanos,omitempty" tf:"nanos,omitempty"`
+
+	// Span of time at a resolution of a second. Must be from 0 to
+	// 315,576,000,000 inclusive. Note: these bounds are computed from: 60
+	// sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years.
+	Seconds *float64 `json:"seconds,omitempty" tf:"seconds,omitempty"`
+}
+
+type LocalSsdRecoveryTimeoutParameters struct {
+
+	// Span of time that's a fraction of a second at nanosecond
+	// resolution. Durations less than one second are represented with a 0
+	// seconds field and a positive nanos field. Must be from 0 to
+	// 999,999,999 inclusive.
+	// +kubebuilder:validation:Optional
+	Nanos *float64 `json:"nanos,omitempty" tf:"nanos,omitempty"`
+
+	// Span of time at a resolution of a second. Must be from 0 to
+	// 315,576,000,000 inclusive. Note: these bounds are computed from: 60
+	// sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years.
+	// +kubebuilder:validation:Required
+	Seconds *float64 `json:"seconds" tf:"seconds,omitempty"`
+}
+
+type MaxRunDurationObservation struct {
+
+	// Span of time that's a fraction of a second at nanosecond
+	// resolution. Durations less than one second are represented with a 0
+	// seconds field and a positive nanos field. Must be from 0 to
+	// 999,999,999 inclusive.
+	Nanos *float64 `json:"nanos,omitempty" tf:"nanos,omitempty"`
+
+	// Span of time at a resolution of a second. Must be from 0 to
+	// 315,576,000,000 inclusive. Note: these bounds are computed from: 60
+	// sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years.
+	Seconds *float64 `json:"seconds,omitempty" tf:"seconds,omitempty"`
+}
+
+type MaxRunDurationParameters struct {
+
+	// Span of time that's a fraction of a second at nanosecond
+	// resolution. Durations less than one second are represented with a 0
+	// seconds field and a positive nanos field. Must be from 0 to
+	// 999,999,999 inclusive.
+	// +kubebuilder:validation:Optional
+	Nanos *float64 `json:"nanos,omitempty" tf:"nanos,omitempty"`
+
+	// Span of time at a resolution of a second. Must be from 0 to
+	// 315,576,000,000 inclusive. Note: these bounds are computed from: 60
+	// sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years.
+	// +kubebuilder:validation:Required
+	Seconds *float64 `json:"seconds" tf:"seconds,omitempty"`
+}
+
 type NetworkInterfaceObservation struct {
 
 	// Access configurations, i.e. IPs via which this
@@ -605,6 +725,10 @@ type NetworkInterfaceObservation struct {
 
 	IPv6AccessType *string `json:"ipv6AccessType,omitempty" tf:"ipv6_access_type,omitempty"`
 
+	IPv6Address *string `json:"ipv6Address,omitempty" tf:"ipv6_address,omitempty"`
+
+	InternalIPv6PrefixLength *float64 `json:"internalIpv6PrefixLength,omitempty" tf:"internal_ipv6_prefix_length,omitempty"`
+
 	// The name of the instance template.
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
@@ -612,6 +736,9 @@ type NetworkInterfaceObservation struct {
 	// Use network attribute for Legacy or Auto subnetted networks and
 	// subnetwork for custom subnetted networks.
 	Network *string `json:"network,omitempty" tf:"network,omitempty"`
+
+	// The URL of the network attachment that this interface should connect to in the following format: projects/{projectNumber}/regions/{region_name}/networkAttachments/{network_attachment_name}.
+	NetworkAttachment *string `json:"networkAttachment,omitempty" tf:"network_attachment,omitempty"`
 
 	// The private IP address to assign to the instance. If
 	// empty, the address will be automatically assigned.
@@ -656,12 +783,22 @@ type NetworkInterfaceParameters struct {
 	// +kubebuilder:validation:Optional
 	IPv6AccessConfig []IPv6AccessConfigParameters `json:"ipv6AccessConfig,omitempty" tf:"ipv6_access_config,omitempty"`
 
+	// +kubebuilder:validation:Optional
+	IPv6Address *string `json:"ipv6Address,omitempty" tf:"ipv6_address,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	InternalIPv6PrefixLength *float64 `json:"internalIpv6PrefixLength,omitempty" tf:"internal_ipv6_prefix_length,omitempty"`
+
 	// The name or self_link of the network to attach this interface to.
 	// Use network attribute for Legacy or Auto subnetted networks and
 	// subnetwork for custom subnetted networks.
 	// +crossplane:generate:reference:type=Network
 	// +kubebuilder:validation:Optional
 	Network *string `json:"network,omitempty" tf:"network,omitempty"`
+
+	// The URL of the network attachment that this interface should connect to in the following format: projects/{projectNumber}/regions/{region_name}/networkAttachments/{network_attachment_name}.
+	// +kubebuilder:validation:Optional
+	NetworkAttachment *string `json:"networkAttachment,omitempty" tf:"network_attachment,omitempty"`
 
 	// The private IP address to assign to the instance. If
 	// empty, the address will be automatically assigned.
@@ -707,6 +844,19 @@ type NetworkInterfaceParameters struct {
 	// Selector for a Subnetwork to populate subnetwork.
 	// +kubebuilder:validation:Optional
 	SubnetworkSelector *v1.Selector `json:"subnetworkSelector,omitempty" tf:"-"`
+}
+
+type NetworkPerformanceConfigObservation struct {
+
+	// The egress bandwidth tier to enable. Possible values: TIER_1, DEFAULT
+	TotalEgressBandwidthTier *string `json:"totalEgressBandwidthTier,omitempty" tf:"total_egress_bandwidth_tier,omitempty"`
+}
+
+type NetworkPerformanceConfigParameters struct {
+
+	// The egress bandwidth tier to enable. Possible values: TIER_1, DEFAULT
+	// +kubebuilder:validation:Required
+	TotalEgressBandwidthTier *string `json:"totalEgressBandwidthTier" tf:"total_egress_bandwidth_tier,omitempty"`
 }
 
 type NodeAffinitiesObservation struct {
@@ -770,6 +920,17 @@ type SchedulingObservation struct {
 	// Describe the type of termination action for SPOT VM. Can be STOP or DELETE.  Read more on here
 	InstanceTerminationAction *string `json:"instanceTerminationAction,omitempty" tf:"instance_termination_action,omitempty"`
 
+	// io/docs/providers/google/guides/provider_versions.html) Specifies the maximum amount of time a Local Ssd Vm should wait while recovery of the Local Ssd state is attempted. Its value should be in between 0 and 168 hours with hour granularity and the default value being 1 hour. Structure is documented below.
+	// The local_ssd_recovery_timeout block supports:
+	LocalSsdRecoveryTimeout []LocalSsdRecoveryTimeoutObservation `json:"localSsdRecoveryTimeout,omitempty" tf:"local_ssd_recovery_timeout,omitempty"`
+
+	// Beta Specifies the frequency of planned maintenance events. The accepted values are: PERIODIC.
+	MaintenanceInterval *string `json:"maintenanceInterval,omitempty" tf:"maintenance_interval,omitempty"`
+
+	// Beta The duration of the instance. Instance will run and be terminated after then, the termination action could be defined in instance_termination_action. Only support DELETE instance_termination_action at this point. Structure is documented below.
+	// The max_run_duration block supports:
+	MaxRunDuration []MaxRunDurationObservation `json:"maxRunDuration,omitempty" tf:"max_run_duration,omitempty"`
+
 	MinNodeCpus *float64 `json:"minNodeCpus,omitempty" tf:"min_node_cpus,omitempty"`
 
 	// Specifies node affinities or anti-affinities
@@ -789,7 +950,7 @@ type SchedulingObservation struct {
 	Preemptible *bool `json:"preemptible,omitempty" tf:"preemptible,omitempty"`
 
 	// Describe the type of preemptible VM. This field accepts the value STANDARD or SPOT. If the value is STANDARD, there will be no discount. If this   is set to SPOT,
-	// preemptible should be true and auto_restart should be
+	// preemptible should be true and automatic_restart should be
 	// false. For more info about
 	// SPOT, read here
 	ProvisioningModel *string `json:"provisioningModel,omitempty" tf:"provisioning_model,omitempty"`
@@ -806,6 +967,20 @@ type SchedulingParameters struct {
 	// Describe the type of termination action for SPOT VM. Can be STOP or DELETE.  Read more on here
 	// +kubebuilder:validation:Optional
 	InstanceTerminationAction *string `json:"instanceTerminationAction,omitempty" tf:"instance_termination_action,omitempty"`
+
+	// io/docs/providers/google/guides/provider_versions.html) Specifies the maximum amount of time a Local Ssd Vm should wait while recovery of the Local Ssd state is attempted. Its value should be in between 0 and 168 hours with hour granularity and the default value being 1 hour. Structure is documented below.
+	// The local_ssd_recovery_timeout block supports:
+	// +kubebuilder:validation:Optional
+	LocalSsdRecoveryTimeout []LocalSsdRecoveryTimeoutParameters `json:"localSsdRecoveryTimeout,omitempty" tf:"local_ssd_recovery_timeout,omitempty"`
+
+	// Beta Specifies the frequency of planned maintenance events. The accepted values are: PERIODIC.
+	// +kubebuilder:validation:Optional
+	MaintenanceInterval *string `json:"maintenanceInterval,omitempty" tf:"maintenance_interval,omitempty"`
+
+	// Beta The duration of the instance. Instance will run and be terminated after then, the termination action could be defined in instance_termination_action. Only support DELETE instance_termination_action at this point. Structure is documented below.
+	// The max_run_duration block supports:
+	// +kubebuilder:validation:Optional
+	MaxRunDuration []MaxRunDurationParameters `json:"maxRunDuration,omitempty" tf:"max_run_duration,omitempty"`
 
 	// +kubebuilder:validation:Optional
 	MinNodeCpus *float64 `json:"minNodeCpus,omitempty" tf:"min_node_cpus,omitempty"`
@@ -830,7 +1005,7 @@ type SchedulingParameters struct {
 	Preemptible *bool `json:"preemptible,omitempty" tf:"preemptible,omitempty"`
 
 	// Describe the type of preemptible VM. This field accepts the value STANDARD or SPOT. If the value is STANDARD, there will be no discount. If this   is set to SPOT,
-	// preemptible should be true and auto_restart should be
+	// preemptible should be true and automatic_restart should be
 	// false. For more info about
 	// SPOT, read here
 	// +kubebuilder:validation:Optional

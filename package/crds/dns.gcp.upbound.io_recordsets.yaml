@@ -91,19 +91,19 @@ spec:
                           type: boolean
                         geo:
                           description: The configuration for Geolocation based routing
-                            policy. Structure is document below.
+                            policy. Structure is documented below.
                           items:
                             properties:
                               healthCheckedTargets:
                                 description: The list of targets to be health checked.
                                   Note that if DNSSEC is enabled for this zone, only
                                   one of rrdatas or health_checked_targets can be
-                                  set. Structure is document below.
+                                  set. Structure is documented below.
                                 items:
                                   properties:
                                     internalLoadBalancers:
                                       description: The list of internal load balancers
-                                        to health check. Structure is document below.
+                                        to health check. Structure is documented below.
                                       items:
                                         properties:
                                           ipAddress:
@@ -119,7 +119,8 @@ spec:
                                           loadBalancerType:
                                             description: 'The type of load balancer.
                                               This value is case-sensitive. Possible
-                                              values: ["regionalL4ilb"]'
+                                              values: ["regionalL4ilb", "regionalL7ilb",
+                                              "globalL7ilb"]'
                                             type: string
                                           networkUrl:
                                             description: The fully qualified url of
@@ -172,7 +173,7 @@ spec:
                             with global to regional failover. Queries are responded
                             to with the global primary targets, but if none of the
                             primary targets are healthy, then we fallback to a regional
-                            failover policy. Structure is document below.
+                            failover policy. Structure is documented below.
                           items:
                             properties:
                               backupGeo:
@@ -185,13 +186,13 @@ spec:
                                       description: The list of targets to be health
                                         checked. Note that if DNSSEC is enabled for
                                         this zone, only one of rrdatas or health_checked_targets
-                                        can be set. Structure is document below.
+                                        can be set. Structure is documented below.
                                       items:
                                         properties:
                                           internalLoadBalancers:
                                             description: The list of internal load
                                               balancers to health check. Structure
-                                              is document below.
+                                              is documented below.
                                             items:
                                               properties:
                                                 ipAddress:
@@ -207,7 +208,8 @@ spec:
                                                 loadBalancerType:
                                                   description: 'The type of load balancer.
                                                     This value is case-sensitive.
-                                                    Possible values: ["regionalL4ilb"]'
+                                                    Possible values: ["regionalL4ilb",
+                                                    "regionalL7ilb", "globalL7ilb"]'
                                                   type: string
                                                 networkUrl:
                                                   description: The fully qualified
@@ -263,12 +265,12 @@ spec:
                                 type: boolean
                               primary:
                                 description: The list of global primary targets to
-                                  be health checked. Structure is document below.
+                                  be health checked. Structure is documented below.
                                 items:
                                   properties:
                                     internalLoadBalancers:
                                       description: The list of internal load balancers
-                                        to health check. Structure is document below.
+                                        to health check. Structure is documented below.
                                       items:
                                         properties:
                                           ipAddress:
@@ -374,7 +376,8 @@ spec:
                                           loadBalancerType:
                                             description: 'The type of load balancer.
                                               This value is case-sensitive. Possible
-                                              values: ["regionalL4ilb"]'
+                                              values: ["regionalL4ilb", "regionalL7ilb",
+                                              "globalL7ilb"]'
                                             type: string
                                           networkUrl:
                                             description: The fully qualified url of
@@ -689,19 +692,19 @@ spec:
                           type: array
                         wrr:
                           description: The configuration for Weighted Round Robin
-                            based routing policy. Structure is document below.
+                            based routing policy. Structure is documented below.
                           items:
                             properties:
                               healthCheckedTargets:
                                 description: The list of targets to be health checked.
                                   Note that if DNSSEC is enabled for this zone, only
                                   one of rrdatas or health_checked_targets can be
-                                  set. Structure is document below.
+                                  set. Structure is documented below.
                                 items:
                                   properties:
                                     internalLoadBalancers:
                                       description: The list of internal load balancers
-                                        to health check. Structure is document below.
+                                        to health check. Structure is documented below.
                                       items:
                                         properties:
                                           ipAddress:
@@ -717,7 +720,8 @@ spec:
                                           loadBalancerType:
                                             description: 'The type of load balancer.
                                               This value is case-sensitive. Possible
-                                              values: ["regionalL4ilb"]'
+                                              values: ["regionalL4ilb", "regionalL7ilb",
+                                              "globalL7ilb"]'
                                             type: string
                                           networkUrl:
                                             description: The fully qualified url of
@@ -1007,19 +1011,19 @@ spec:
                           type: boolean
                         geo:
                           description: The configuration for Geolocation based routing
-                            policy. Structure is document below.
+                            policy. Structure is documented below.
                           items:
                             properties:
                               healthCheckedTargets:
                                 description: The list of targets to be health checked.
                                   Note that if DNSSEC is enabled for this zone, only
                                   one of rrdatas or health_checked_targets can be
-                                  set. Structure is document below.
+                                  set. Structure is documented below.
                                 items:
                                   properties:
                                     internalLoadBalancers:
                                       description: The list of internal load balancers
-                                        to health check. Structure is document below.
+                                        to health check. Structure is documented below.
                                       items:
                                         properties:
                                           ipAddress:
@@ -1035,7 +1039,8 @@ spec:
                                           loadBalancerType:
                                             description: 'The type of load balancer.
                                               This value is case-sensitive. Possible
-                                              values: ["regionalL4ilb"]'
+                                              values: ["regionalL4ilb", "regionalL7ilb",
+                                              "globalL7ilb"]'
                                             type: string
                                           networkUrl:
                                             description: The fully qualified url of
@@ -1077,7 +1082,7 @@ spec:
                             with global to regional failover. Queries are responded
                             to with the global primary targets, but if none of the
                             primary targets are healthy, then we fallback to a regional
-                            failover policy. Structure is document below.
+                            failover policy. Structure is documented below.
                           items:
                             properties:
                               backupGeo:
@@ -1090,13 +1095,13 @@ spec:
                                       description: The list of targets to be health
                                         checked. Note that if DNSSEC is enabled for
                                         this zone, only one of rrdatas or health_checked_targets
-                                        can be set. Structure is document below.
+                                        can be set. Structure is documented below.
                                       items:
                                         properties:
                                           internalLoadBalancers:
                                             description: The list of internal load
                                               balancers to health check. Structure
-                                              is document below.
+                                              is documented below.
                                             items:
                                               properties:
                                                 ipAddress:
@@ -1112,7 +1117,8 @@ spec:
                                                 loadBalancerType:
                                                   description: 'The type of load balancer.
                                                     This value is case-sensitive.
-                                                    Possible values: ["regionalL4ilb"]'
+                                                    Possible values: ["regionalL4ilb",
+                                                    "regionalL7ilb", "globalL7ilb"]'
                                                   type: string
                                                 networkUrl:
                                                   description: The fully qualified
@@ -1157,12 +1163,12 @@ spec:
                                 type: boolean
                               primary:
                                 description: The list of global primary targets to
-                                  be health checked. Structure is document below.
+                                  be health checked. Structure is documented below.
                                 items:
                                   properties:
                                     internalLoadBalancers:
                                       description: The list of internal load balancers
-                                        to health check. Structure is document below.
+                                        to health check. Structure is documented below.
                                       items:
                                         properties:
                                           ipAddress:
@@ -1178,7 +1184,8 @@ spec:
                                           loadBalancerType:
                                             description: 'The type of load balancer.
                                               This value is case-sensitive. Possible
-                                              values: ["regionalL4ilb"]'
+                                              values: ["regionalL4ilb", "regionalL7ilb",
+                                              "globalL7ilb"]'
                                             type: string
                                           networkUrl:
                                             description: The fully qualified url of
@@ -1214,19 +1221,19 @@ spec:
                           type: array
                         wrr:
                           description: The configuration for Weighted Round Robin
-                            based routing policy. Structure is document below.
+                            based routing policy. Structure is documented below.
                           items:
                             properties:
                               healthCheckedTargets:
                                 description: The list of targets to be health checked.
                                   Note that if DNSSEC is enabled for this zone, only
                                   one of rrdatas or health_checked_targets can be
-                                  set. Structure is document below.
+                                  set. Structure is documented below.
                                 items:
                                   properties:
                                     internalLoadBalancers:
                                       description: The list of internal load balancers
-                                        to health check. Structure is document below.
+                                        to health check. Structure is documented below.
                                       items:
                                         properties:
                                           ipAddress:
@@ -1242,7 +1249,8 @@ spec:
                                           loadBalancerType:
                                             description: 'The type of load balancer.
                                               This value is case-sensitive. Possible
-                                              values: ["regionalL4ilb"]'
+                                              values: ["regionalL4ilb", "regionalL7ilb",
+                                              "globalL7ilb"]'
                                             type: string
                                           networkUrl:
                                             description: The fully qualified url of
