@@ -27,86 +27,6 @@ spec:
 ---
 
 apiVersion: compute.gcp.upbound.io/v1beta1
-kind: Firewall
-metadata:
-  annotations:
-    meta.upbound.io/example-id: compute/v1beta1/forwardingrule
-  labels:
-    testing.upbound.io/example-name: fw-iap
-  name: fw-iap
-spec:
-  forProvider:
-    allow:
-    - protocol: tcp
-    direction: INGRESS
-    networkSelector:
-      matchLabels:
-        testing.upbound.io/example-name: ilb_network
-    provider: ${google-beta}
-    sourceRanges:
-    - 130.211.0.0/22
-    - 35.191.0.0/16
-    - 35.235.240.0/20
-
----
-
-apiVersion: compute.gcp.upbound.io/v1beta1
-kind: Firewall
-metadata:
-  annotations:
-    meta.upbound.io/example-id: compute/v1beta1/forwardingrule
-  labels:
-    testing.upbound.io/example-name: fw-ilb-to-backends
-  name: fw-ilb-to-backends
-spec:
-  forProvider:
-    allow:
-    - ports:
-      - "80"
-      - "443"
-      - "8080"
-      protocol: tcp
-    direction: INGRESS
-    networkSelector:
-      matchLabels:
-        testing.upbound.io/example-name: ilb_network
-    provider: ${google-beta}
-    sourceRanges:
-    - 10.0.0.0/24
-    targetTags:
-    - http-server
-
----
-
-apiVersion: compute.gcp.upbound.io/v1beta1
-kind: Instance
-metadata:
-  annotations:
-    meta.upbound.io/example-id: compute/v1beta1/forwardingrule
-  labels:
-    testing.upbound.io/example-name: vm-test
-  name: vm-test
-spec:
-  forProvider:
-    bootDisk:
-    - initializeParams:
-      - imageSelector:
-          matchLabels:
-            testing.upbound.io/example-name: example
-    machineType: e2-small
-    networkInterface:
-    - networkSelector:
-        matchLabels:
-          testing.upbound.io/example-name: ilb_network
-      subnetworkSelector:
-        matchLabels:
-          testing.upbound.io/example-name: ilb_subnet
-    provider: ${google-beta}
-    zone: europe-west1-b
-
----
-
-apiVersion: compute.gcp.upbound.io/v1beta1
 kind: InstanceTemplate
 metadata:
   annotations:
@@ -308,6 +228,6 @@ spec:
       matchLabels:
         testing.upbound.io/example-name: ilb_network
     provider: ${google-beta}
-    purpose: INTERNAL_HTTPS_LOAD_BALANCER
+    purpose: REGIONAL_MANAGED_PROXY
     region: europe-west1
     role: ACTIVE

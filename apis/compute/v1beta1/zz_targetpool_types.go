@@ -46,6 +46,9 @@ type TargetPoolInitParameters struct {
 	// is not provided, the provider project is used.
 	Project *string `json:"project,omitempty" tf:"project,omitempty"`
 
+	// The resource URL for the security policy associated with this target pool.
+	SecurityPolicy *string `json:"securityPolicy,omitempty" tf:"security_policy,omitempty"`
+
 	// How to distribute load. Options are "NONE" (no
 	// affinity). "CLIENT_IP" (hash of the source/dest addresses / ports), and
 	// "CLIENT_IP_PROTO" also includes the protocol (default "NONE").
@@ -83,6 +86,9 @@ type TargetPoolObservation struct {
 	// Where the target pool resides. Defaults to project
 	// region.
 	Region *string `json:"region,omitempty" tf:"region,omitempty"`
+
+	// The resource URL for the security policy associated with this target pool.
+	SecurityPolicy *string `json:"securityPolicy,omitempty" tf:"security_policy,omitempty"`
 
 	// The URI of the created resource.
 	SelfLink *string `json:"selfLink,omitempty" tf:"self_link,omitempty"`
@@ -137,6 +143,10 @@ type TargetPoolParameters struct {
 	// region.
 	// +kubebuilder:validation:Required
 	Region *string `json:"region" tf:"region,omitempty"`
+
+	// The resource URL for the security policy associated with this target pool.
+	// +kubebuilder:validation:Optional
+	SecurityPolicy *string `json:"securityPolicy,omitempty" tf:"security_policy,omitempty"`
 
 	// How to distribute load. Options are "NONE" (no
 	// affinity). "CLIENT_IP" (hash of the source/dest addresses / ports), and

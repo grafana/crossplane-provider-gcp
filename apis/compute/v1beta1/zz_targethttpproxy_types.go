@@ -30,6 +30,14 @@ type TargetHTTPProxyInitParameters struct {
 	// An optional description of this resource.
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
 
+	// Specifies how long to keep a connection open, after completing a response,
+	// while there is no matching traffic (in seconds). If an HTTP keepalive is
+	// not specified, a default value (610 seconds) will be used. For Global
+	// external HTTP(S) load balancer, the minimum allowed value is 5 seconds and
+	// the maximum allowed value is 1200 seconds. For Global external HTTP(S)
+	// load balancer (classic), this option is not available publicly.
+	HTTPKeepAliveTimeoutSec *float64 `json:"httpKeepAliveTimeoutSec,omitempty" tf:"http_keep_alive_timeout_sec,omitempty"`
+
 	// The ID of the project in which the resource belongs.
 	// If it is not provided, the provider project is used.
 	Project *string `json:"project,omitempty" tf:"project,omitempty"`
@@ -37,6 +45,10 @@ type TargetHTTPProxyInitParameters struct {
 	// This field only applies when the forwarding rule that references
 	// this target proxy has a loadBalancingScheme set to INTERNAL_SELF_MANAGED.
 	ProxyBind *bool `json:"proxyBind,omitempty" tf:"proxy_bind,omitempty"`
+
+	// A reference to the UrlMap resource that defines the mapping from URL
+	// to the BackendService.
+	URLMap *string `json:"urlMap,omitempty" tf:"url_map,omitempty"`
 }
 
 type TargetHTTPProxyObservation struct {
@@ -46,6 +58,14 @@ type TargetHTTPProxyObservation struct {
 
 	// An optional description of this resource.
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// Specifies how long to keep a connection open, after completing a response,
+	// while there is no matching traffic (in seconds). If an HTTP keepalive is
+	// not specified, a default value (610 seconds) will be used. For Global
+	// external HTTP(S) load balancer, the minimum allowed value is 5 seconds and
+	// the maximum allowed value is 1200 seconds. For Global external HTTP(S)
+	// load balancer (classic), this option is not available publicly.
+	HTTPKeepAliveTimeoutSec *float64 `json:"httpKeepAliveTimeoutSec,omitempty" tf:"http_keep_alive_timeout_sec,omitempty"`
 
 	// an identifier for the resource with format projects/{{project}}/global/targetHttpProxies/{{name}}
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
@@ -75,6 +95,15 @@ type TargetHTTPProxyParameters struct {
 	// +kubebuilder:validation:Optional
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
 
+	// Specifies how long to keep a connection open, after completing a response,
+	// while there is no matching traffic (in seconds). If an HTTP keepalive is
+	// not specified, a default value (610 seconds) will be used. For Global
+	// external HTTP(S) load balancer, the minimum allowed value is 5 seconds and
+	// the maximum allowed value is 1200 seconds. For Global external HTTP(S)
+	// load balancer (classic), this option is not available publicly.
+	// +kubebuilder:validation:Optional
+	HTTPKeepAliveTimeoutSec *float64 `json:"httpKeepAliveTimeoutSec,omitempty" tf:"http_keep_alive_timeout_sec,omitempty"`
+
 	// The ID of the project in which the resource belongs.
 	// If it is not provided, the provider project is used.
 	// +kubebuilder:validation:Optional
@@ -87,18 +116,8 @@ type TargetHTTPProxyParameters struct {
 
 	// A reference to the UrlMap resource that defines the mapping from URL
 	// to the BackendService.
-	// +crossplane:generate:reference:type=github.com/upbound/provider-gcp/apis/compute/v1beta1.URLMap
-	// +crossplane:generate:reference:extractor=github.com/upbound/upjet/pkg/resource.ExtractResourceID()
 	// +kubebuilder:validation:Optional
 	URLMap *string `json:"urlMap,omitempty" tf:"url_map,omitempty"`
-
-	// Reference to a URLMap in compute to populate urlMap.
-	// +kubebuilder:validation:Optional
-	URLMapRef *v1.Reference `json:"urlMapRef,omitempty" tf:"-"`
-
-	// Selector for a URLMap in compute to populate urlMap.
-	// +kubebuilder:validation:Optional
-	URLMapSelector *v1.Selector `json:"urlMapSelector,omitempty" tf:"-"`
 }
 
 // TargetHTTPProxySpec defines the desired state of TargetHTTPProxy
@@ -137,8 +156,9 @@ type TargetHTTPProxyStatus struct {
 type TargetHTTPProxy struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              TargetHTTPProxySpec   `json:"spec"`
-	Status            TargetHTTPProxyStatus `json:"status,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.urlMap) || has(self.initProvider.urlMap)",message="urlMap is a required parameter"
+	Spec   TargetHTTPProxySpec   `json:"spec"`
+	Status TargetHTTPProxyStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

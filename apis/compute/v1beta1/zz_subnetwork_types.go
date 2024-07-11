@@ -72,12 +72,21 @@ type SecondaryIPRangeParameters struct {
 	RangeName *string `json:"rangeName,omitempty" tf:"range_name"`
 }
 
-type SubnetworkInitParameters_2 struct {
+type SubnetworkInitParameters struct {
+
+	// Typically packets destined to IPs within the subnetwork range that do not match
+	// existing resources are dropped and prevented from leaving the VPC.
+	// Setting this field to true will allow these packets to match dynamic routes injected
+	// via BGP even if their destinations match existing subnet ranges.
+	AllowSubnetCidrRoutesOverlap *bool `json:"allowSubnetCidrRoutesOverlap,omitempty" tf:"allow_subnet_cidr_routes_overlap,omitempty"`
 
 	// An optional description of this resource. Provide this property when
 	// you create the resource. This field can be set only at resource
 	// creation time.
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// The range of external IPv6 addresses that are owned by this subnetwork.
+	ExternalIPv6Prefix *string `json:"externalIpv6Prefix,omitempty" tf:"external_ipv6_prefix,omitempty"`
 
 	// The range of internal addresses that are owned by this subnetwork.
 	// Provide this property when you create the subnetwork. For example,
@@ -91,9 +100,10 @@ type SubnetworkInitParameters_2 struct {
 	// Possible values are: EXTERNAL, INTERNAL.
 	IPv6AccessType *string `json:"ipv6AccessType,omitempty" tf:"ipv6_access_type,omitempty"`
 
-	// Denotes the logging options for the subnetwork flow logs. If logging is enabled
-	// logs will be exported to Stackdriver. This field cannot be set if the purpose of this
-	// subnetwork is INTERNAL_HTTPS_LOAD_BALANCER
+	// This field denotes the VPC flow logging options for this subnetwork. If
+	// logging is enabled, logs are exported to Cloud Logging. Flow logging
+	// isn't supported if the subnet purpose field is set to subnetwork is
+	// REGIONAL_MANAGED_PROXY or GLOBAL_MANAGED_PROXY.
 	// Structure is documented below.
 	LogConfig []SubnetworkLogConfigInitParameters `json:"logConfig,omitempty" tf:"log_config,omitempty"`
 
@@ -108,18 +118,20 @@ type SubnetworkInitParameters_2 struct {
 	// If it is not provided, the provider project is used.
 	Project *string `json:"project,omitempty" tf:"project,omitempty"`
 
-	// The purpose of the resource. This field can be either PRIVATE_RFC_1918, INTERNAL_HTTPS_LOAD_BALANCER or REGIONAL_MANAGED_PROXY.
-	// A subnetwork with purpose set to INTERNAL_HTTPS_LOAD_BALANCER is a user-created subnetwork that is reserved for Internal HTTP(S) Load Balancing.
-	// A subnetwork in a given region with purpose set to REGIONAL_MANAGED_PROXY is a proxy-only subnet and is shared between all the regional Envoy-based load balancers.
+	// The purpose of the resource. This field can be either PRIVATE_RFC_1918, REGIONAL_MANAGED_PROXY, GLOBAL_MANAGED_PROXY, PRIVATE_SERVICE_CONNECT or PRIVATE_NAT(Beta).
+	// A subnet with purpose set to REGIONAL_MANAGED_PROXY is a user-created subnetwork that is reserved for regional Envoy-based load balancers.
+	// A subnetwork in a given region with purpose set to GLOBAL_MANAGED_PROXY is a proxy-only subnet and is shared between all the cross-regional Envoy-based load balancers.
+	// A subnetwork with purpose set to PRIVATE_SERVICE_CONNECT reserves the subnet for hosting a Private Service Connect published service.
+	// A subnetwork with purpose set to PRIVATE_NAT is used as source range for Private NAT gateways.
+	// Note that REGIONAL_MANAGED_PROXY is the preferred setting for all regional Envoy load balancers.
 	// If unspecified, the purpose defaults to PRIVATE_RFC_1918.
-	// The enableFlowLogs field isn't supported with the purpose field set to INTERNAL_HTTPS_LOAD_BALANCER.
 	Purpose *string `json:"purpose,omitempty" tf:"purpose,omitempty"`
 
 	// The role of subnetwork.
+	// Currently, this field is only used when purpose is REGIONAL_MANAGED_PROXY.
 	// The value can be set to ACTIVE or BACKUP.
-	// An ACTIVE subnetwork is one that is currently being used.
+	// An ACTIVE subnetwork is one that is currently being used for Envoy-based load balancers in a region.
 	// A BACKUP subnetwork is one that is ready to be promoted to ACTIVE or is currently draining.
-	// Subnetwork role must be specified when purpose is set to INTERNAL_HTTPS_LOAD_BALANCER or REGIONAL_MANAGED_PROXY.
 	// Possible values are: ACTIVE, BACKUP.
 	Role *string `json:"role,omitempty" tf:"role,omitempty"`
 
@@ -248,7 +260,13 @@ type SubnetworkLogConfigParameters struct {
 	MetadataFields []*string `json:"metadataFields,omitempty" tf:"metadata_fields,omitempty"`
 }
 
-type SubnetworkObservation_2 struct {
+type SubnetworkObservation struct {
+
+	// Typically packets destined to IPs within the subnetwork range that do not match
+	// existing resources are dropped and prevented from leaving the VPC.
+	// Setting this field to true will allow these packets to match dynamic routes injected
+	// via BGP even if their destinations match existing subnet ranges.
+	AllowSubnetCidrRoutesOverlap *bool `json:"allowSubnetCidrRoutesOverlap,omitempty" tf:"allow_subnet_cidr_routes_overlap,omitempty"`
 
 	// Creation timestamp in RFC3339 text format.
 	CreationTimestamp *string `json:"creationTimestamp,omitempty" tf:"creation_timestamp,omitempty"`
@@ -285,9 +303,13 @@ type SubnetworkObservation_2 struct {
 	// The range of internal IPv6 addresses that are owned by this subnetwork.
 	IPv6CidrRange *string `json:"ipv6CidrRange,omitempty" tf:"ipv6_cidr_range,omitempty"`
 
-	// Denotes the logging options for the subnetwork flow logs. If logging is enabled
-	// logs will be exported to Stackdriver. This field cannot be set if the purpose of this
-	// subnetwork is INTERNAL_HTTPS_LOAD_BALANCER
+	// The internal IPv6 address range that is assigned to this subnetwork.
+	InternalIPv6Prefix *string `json:"internalIpv6Prefix,omitempty" tf:"internal_ipv6_prefix,omitempty"`
+
+	// This field denotes the VPC flow logging options for this subnetwork. If
+	// logging is enabled, logs are exported to Cloud Logging. Flow logging
+	// isn't supported if the subnet purpose field is set to subnetwork is
+	// REGIONAL_MANAGED_PROXY or GLOBAL_MANAGED_PROXY.
 	// Structure is documented below.
 	LogConfig []SubnetworkLogConfigObservation `json:"logConfig,omitempty" tf:"log_config,omitempty"`
 
@@ -306,21 +328,23 @@ type SubnetworkObservation_2 struct {
 	// If it is not provided, the provider project is used.
 	Project *string `json:"project,omitempty" tf:"project,omitempty"`
 
-	// The purpose of the resource. This field can be either PRIVATE_RFC_1918, INTERNAL_HTTPS_LOAD_BALANCER or REGIONAL_MANAGED_PROXY.
-	// A subnetwork with purpose set to INTERNAL_HTTPS_LOAD_BALANCER is a user-created subnetwork that is reserved for Internal HTTP(S) Load Balancing.
-	// A subnetwork in a given region with purpose set to REGIONAL_MANAGED_PROXY is a proxy-only subnet and is shared between all the regional Envoy-based load balancers.
+	// The purpose of the resource. This field can be either PRIVATE_RFC_1918, REGIONAL_MANAGED_PROXY, GLOBAL_MANAGED_PROXY, PRIVATE_SERVICE_CONNECT or PRIVATE_NAT(Beta).
+	// A subnet with purpose set to REGIONAL_MANAGED_PROXY is a user-created subnetwork that is reserved for regional Envoy-based load balancers.
+	// A subnetwork in a given region with purpose set to GLOBAL_MANAGED_PROXY is a proxy-only subnet and is shared between all the cross-regional Envoy-based load balancers.
+	// A subnetwork with purpose set to PRIVATE_SERVICE_CONNECT reserves the subnet for hosting a Private Service Connect published service.
+	// A subnetwork with purpose set to PRIVATE_NAT is used as source range for Private NAT gateways.
+	// Note that REGIONAL_MANAGED_PROXY is the preferred setting for all regional Envoy load balancers.
 	// If unspecified, the purpose defaults to PRIVATE_RFC_1918.
-	// The enableFlowLogs field isn't supported with the purpose field set to INTERNAL_HTTPS_LOAD_BALANCER.
 	Purpose *string `json:"purpose,omitempty" tf:"purpose,omitempty"`
 
 	// The GCP region for this subnetwork.
 	Region *string `json:"region,omitempty" tf:"region,omitempty"`
 
 	// The role of subnetwork.
+	// Currently, this field is only used when purpose is REGIONAL_MANAGED_PROXY.
 	// The value can be set to ACTIVE or BACKUP.
-	// An ACTIVE subnetwork is one that is currently being used.
+	// An ACTIVE subnetwork is one that is currently being used for Envoy-based load balancers in a region.
 	// A BACKUP subnetwork is one that is ready to be promoted to ACTIVE or is currently draining.
-	// Subnetwork role must be specified when purpose is set to INTERNAL_HTTPS_LOAD_BALANCER or REGIONAL_MANAGED_PROXY.
 	// Possible values are: ACTIVE, BACKUP.
 	Role *string `json:"role,omitempty" tf:"role,omitempty"`
 
@@ -345,13 +369,24 @@ type SubnetworkObservation_2 struct {
 	StackType *string `json:"stackType,omitempty" tf:"stack_type,omitempty"`
 }
 
-type SubnetworkParameters_2 struct {
+type SubnetworkParameters struct {
+
+	// Typically packets destined to IPs within the subnetwork range that do not match
+	// existing resources are dropped and prevented from leaving the VPC.
+	// Setting this field to true will allow these packets to match dynamic routes injected
+	// via BGP even if their destinations match existing subnet ranges.
+	// +kubebuilder:validation:Optional
+	AllowSubnetCidrRoutesOverlap *bool `json:"allowSubnetCidrRoutesOverlap,omitempty" tf:"allow_subnet_cidr_routes_overlap,omitempty"`
 
 	// An optional description of this resource. Provide this property when
 	// you create the resource. This field can be set only at resource
 	// creation time.
 	// +kubebuilder:validation:Optional
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// The range of external IPv6 addresses that are owned by this subnetwork.
+	// +kubebuilder:validation:Optional
+	ExternalIPv6Prefix *string `json:"externalIpv6Prefix,omitempty" tf:"external_ipv6_prefix,omitempty"`
 
 	// The range of internal addresses that are owned by this subnetwork.
 	// Provide this property when you create the subnetwork. For example,
@@ -367,9 +402,10 @@ type SubnetworkParameters_2 struct {
 	// +kubebuilder:validation:Optional
 	IPv6AccessType *string `json:"ipv6AccessType,omitempty" tf:"ipv6_access_type,omitempty"`
 
-	// Denotes the logging options for the subnetwork flow logs. If logging is enabled
-	// logs will be exported to Stackdriver. This field cannot be set if the purpose of this
-	// subnetwork is INTERNAL_HTTPS_LOAD_BALANCER
+	// This field denotes the VPC flow logging options for this subnetwork. If
+	// logging is enabled, logs are exported to Cloud Logging. Flow logging
+	// isn't supported if the subnet purpose field is set to subnetwork is
+	// REGIONAL_MANAGED_PROXY or GLOBAL_MANAGED_PROXY.
 	// Structure is documented below.
 	// +kubebuilder:validation:Optional
 	LogConfig []SubnetworkLogConfigParameters `json:"logConfig,omitempty" tf:"log_config,omitempty"`
@@ -402,11 +438,13 @@ type SubnetworkParameters_2 struct {
 	// +kubebuilder:validation:Optional
 	Project *string `json:"project,omitempty" tf:"project,omitempty"`
 
-	// The purpose of the resource. This field can be either PRIVATE_RFC_1918, INTERNAL_HTTPS_LOAD_BALANCER or REGIONAL_MANAGED_PROXY.
-	// A subnetwork with purpose set to INTERNAL_HTTPS_LOAD_BALANCER is a user-created subnetwork that is reserved for Internal HTTP(S) Load Balancing.
-	// A subnetwork in a given region with purpose set to REGIONAL_MANAGED_PROXY is a proxy-only subnet and is shared between all the regional Envoy-based load balancers.
+	// The purpose of the resource. This field can be either PRIVATE_RFC_1918, REGIONAL_MANAGED_PROXY, GLOBAL_MANAGED_PROXY, PRIVATE_SERVICE_CONNECT or PRIVATE_NAT(Beta).
+	// A subnet with purpose set to REGIONAL_MANAGED_PROXY is a user-created subnetwork that is reserved for regional Envoy-based load balancers.
+	// A subnetwork in a given region with purpose set to GLOBAL_MANAGED_PROXY is a proxy-only subnet and is shared between all the cross-regional Envoy-based load balancers.
+	// A subnetwork with purpose set to PRIVATE_SERVICE_CONNECT reserves the subnet for hosting a Private Service Connect published service.
+	// A subnetwork with purpose set to PRIVATE_NAT is used as source range for Private NAT gateways.
+	// Note that REGIONAL_MANAGED_PROXY is the preferred setting for all regional Envoy load balancers.
 	// If unspecified, the purpose defaults to PRIVATE_RFC_1918.
-	// The enableFlowLogs field isn't supported with the purpose field set to INTERNAL_HTTPS_LOAD_BALANCER.
 	// +kubebuilder:validation:Optional
 	Purpose *string `json:"purpose,omitempty" tf:"purpose,omitempty"`
 
@@ -415,10 +453,10 @@ type SubnetworkParameters_2 struct {
 	Region *string `json:"region" tf:"region,omitempty"`
 
 	// The role of subnetwork.
+	// Currently, this field is only used when purpose is REGIONAL_MANAGED_PROXY.
 	// The value can be set to ACTIVE or BACKUP.
-	// An ACTIVE subnetwork is one that is currently being used.
+	// An ACTIVE subnetwork is one that is currently being used for Envoy-based load balancers in a region.
 	// A BACKUP subnetwork is one that is ready to be promoted to ACTIVE or is currently draining.
-	// Subnetwork role must be specified when purpose is set to INTERNAL_HTTPS_LOAD_BALANCER or REGIONAL_MANAGED_PROXY.
 	// Possible values are: ACTIVE, BACKUP.
 	// +kubebuilder:validation:Optional
 	Role *string `json:"role,omitempty" tf:"role,omitempty"`
@@ -446,7 +484,7 @@ type SubnetworkParameters_2 struct {
 // SubnetworkSpec defines the desired state of Subnetwork
 type SubnetworkSpec struct {
 	v1.ResourceSpec `json:",inline"`
-	ForProvider     SubnetworkParameters_2 `json:"forProvider"`
+	ForProvider     SubnetworkParameters `json:"forProvider"`
 	// THIS IS AN ALPHA FIELD. Do not use it in production. It is not honored
 	// unless the relevant Crossplane feature flag is enabled, and may be
 	// changed or removed without notice.
@@ -458,13 +496,13 @@ type SubnetworkSpec struct {
 	// required on creation, but we do not desire to update them after creation,
 	// for example because of an external controller is managing them, like an
 	// autoscaler.
-	InitProvider SubnetworkInitParameters_2 `json:"initProvider,omitempty"`
+	InitProvider SubnetworkInitParameters `json:"initProvider,omitempty"`
 }
 
 // SubnetworkStatus defines the observed state of Subnetwork.
 type SubnetworkStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        SubnetworkObservation_2 `json:"atProvider,omitempty"`
+	AtProvider        SubnetworkObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

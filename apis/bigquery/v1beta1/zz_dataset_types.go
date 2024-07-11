@@ -73,6 +73,10 @@ type AccessInitParameters struct {
 	// An email address of a Google Group to grant access to.
 	GroupByEmail *string `json:"groupByEmail,omitempty" tf:"group_by_email,omitempty"`
 
+	// Some other type of member that appears in the IAM Policy but isn't a user,
+	// group, domain, or special group. For example: allUsers
+	IAMMember *string `json:"iamMember,omitempty" tf:"iam_member,omitempty"`
+
 	// Describes the rights granted to the user specified by the other
 	// member of the access object. Basic, predefined, and custom roles
 	// are supported. Predefined roles that have equivalent basic roles
@@ -112,6 +116,10 @@ type AccessObservation struct {
 
 	// An email address of a Google Group to grant access to.
 	GroupByEmail *string `json:"groupByEmail,omitempty" tf:"group_by_email,omitempty"`
+
+	// Some other type of member that appears in the IAM Policy but isn't a user,
+	// group, domain, or special group. For example: allUsers
+	IAMMember *string `json:"iamMember,omitempty" tf:"iam_member,omitempty"`
 
 	// Describes the rights granted to the user specified by the other
 	// member of the access object. Basic, predefined, and custom roles
@@ -159,6 +167,11 @@ type AccessParameters struct {
 	// An email address of a Google Group to grant access to.
 	// +kubebuilder:validation:Optional
 	GroupByEmail *string `json:"groupByEmail,omitempty" tf:"group_by_email,omitempty"`
+
+	// Some other type of member that appears in the IAM Policy but isn't a user,
+	// group, domain, or special group. For example: allUsers
+	// +kubebuilder:validation:Optional
+	IAMMember *string `json:"iamMember,omitempty" tf:"iam_member,omitempty"`
 
 	// Describes the rights granted to the user specified by the other
 	// member of the access object. Basic, predefined, and custom roles
@@ -278,6 +291,10 @@ type DatasetInitParameters struct {
 	// A user-friendly description of the dataset
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
 
+	// Information about the external metadata storage where the dataset is defined.
+	// Structure is documented below.
+	ExternalDatasetReference []ExternalDatasetReferenceInitParameters `json:"externalDatasetReference,omitempty" tf:"external_dataset_reference,omitempty"`
+
 	// A descriptive name for the dataset
 	FriendlyName *string `json:"friendlyName,omitempty" tf:"friendly_name,omitempty"`
 
@@ -287,7 +304,7 @@ type DatasetInitParameters struct {
 	IsCaseInsensitive *bool `json:"isCaseInsensitive,omitempty" tf:"is_case_insensitive,omitempty"`
 
 	// The labels associated with this dataset. You can use these to
-	// organize and group your datasets
+	// organize and group your datasets.
 	Labels map[string]*string `json:"labels,omitempty" tf:"labels,omitempty"`
 
 	// The geographic location where the dataset should reside.
@@ -296,6 +313,12 @@ type DatasetInitParameters struct {
 
 	// Defines the time travel window in hours. The value can be from 48 to 168 hours (2 to 7 days).
 	MaxTimeTravelHours *string `json:"maxTimeTravelHours,omitempty" tf:"max_time_travel_hours,omitempty"`
+
+	// Specifies the storage billing model for the dataset.
+	// Set this flag value to LOGICAL to use logical bytes for storage billing,
+	// or to PHYSICAL to use physical bytes instead.
+	// LOGICAL is the default if this flag isn't specified.
+	StorageBillingModel *string `json:"storageBillingModel,omitempty" tf:"storage_billing_model,omitempty"`
 }
 
 type DatasetObservation struct {
@@ -339,8 +362,15 @@ type DatasetObservation struct {
 	// A user-friendly description of the dataset
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
 
+	// for all of the labels present on the resource.
+	EffectiveLabels map[string]*string `json:"effectiveLabels,omitempty" tf:"effective_labels,omitempty"`
+
 	// A hash of the resource.
 	Etag *string `json:"etag,omitempty" tf:"etag,omitempty"`
+
+	// Information about the external metadata storage where the dataset is defined.
+	// Structure is documented below.
+	ExternalDatasetReference []ExternalDatasetReferenceObservation `json:"externalDatasetReference,omitempty" tf:"external_dataset_reference,omitempty"`
 
 	// A descriptive name for the dataset
 	FriendlyName *string `json:"friendlyName,omitempty" tf:"friendly_name,omitempty"`
@@ -354,7 +384,7 @@ type DatasetObservation struct {
 	IsCaseInsensitive *bool `json:"isCaseInsensitive,omitempty" tf:"is_case_insensitive,omitempty"`
 
 	// The labels associated with this dataset. You can use these to
-	// organize and group your datasets
+	// organize and group your datasets.
 	Labels map[string]*string `json:"labels,omitempty" tf:"labels,omitempty"`
 
 	// The date when this dataset or any of its tables was last modified, in
@@ -374,6 +404,16 @@ type DatasetObservation struct {
 
 	// The URI of the created resource.
 	SelfLink *string `json:"selfLink,omitempty" tf:"self_link,omitempty"`
+
+	// Specifies the storage billing model for the dataset.
+	// Set this flag value to LOGICAL to use logical bytes for storage billing,
+	// or to PHYSICAL to use physical bytes instead.
+	// LOGICAL is the default if this flag isn't specified.
+	StorageBillingModel *string `json:"storageBillingModel,omitempty" tf:"storage_billing_model,omitempty"`
+
+	// The combination of labels configured directly on the resource
+	// and default labels configured on the provider.
+	TerraformLabels map[string]*string `json:"terraformLabels,omitempty" tf:"terraform_labels,omitempty"`
 }
 
 type DatasetParameters struct {
@@ -420,6 +460,11 @@ type DatasetParameters struct {
 	// +kubebuilder:validation:Optional
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
 
+	// Information about the external metadata storage where the dataset is defined.
+	// Structure is documented below.
+	// +kubebuilder:validation:Optional
+	ExternalDatasetReference []ExternalDatasetReferenceParameters `json:"externalDatasetReference,omitempty" tf:"external_dataset_reference,omitempty"`
+
 	// A descriptive name for the dataset
 	// +kubebuilder:validation:Optional
 	FriendlyName *string `json:"friendlyName,omitempty" tf:"friendly_name,omitempty"`
@@ -431,7 +476,7 @@ type DatasetParameters struct {
 	IsCaseInsensitive *bool `json:"isCaseInsensitive,omitempty" tf:"is_case_insensitive,omitempty"`
 
 	// The labels associated with this dataset. You can use these to
-	// organize and group your datasets
+	// organize and group your datasets.
 	// +kubebuilder:validation:Optional
 	Labels map[string]*string `json:"labels,omitempty" tf:"labels,omitempty"`
 
@@ -448,9 +493,21 @@ type DatasetParameters struct {
 	// If it is not provided, the provider project is used.
 	// +kubebuilder:validation:Optional
 	Project *string `json:"project,omitempty" tf:"project,omitempty"`
+
+	// Specifies the storage billing model for the dataset.
+	// Set this flag value to LOGICAL to use logical bytes for storage billing,
+	// or to PHYSICAL to use physical bytes instead.
+	// LOGICAL is the default if this flag isn't specified.
+	// +kubebuilder:validation:Optional
+	StorageBillingModel *string `json:"storageBillingModel,omitempty" tf:"storage_billing_model,omitempty"`
 }
 
 type DefaultEncryptionConfigurationInitParameters struct {
+
+	// Describes the Cloud KMS encryption key that will be used to protect destination
+	// BigQuery table. The BigQuery Service Account associated with your project requires
+	// access to this encryption key.
+	KMSKeyName *string `json:"kmsKeyName,omitempty" tf:"kms_key_name,omitempty"`
 }
 
 type DefaultEncryptionConfigurationObservation struct {
@@ -466,21 +523,54 @@ type DefaultEncryptionConfigurationParameters struct {
 	// Describes the Cloud KMS encryption key that will be used to protect destination
 	// BigQuery table. The BigQuery Service Account associated with your project requires
 	// access to this encryption key.
-	// +crossplane:generate:reference:type=github.com/upbound/provider-gcp/apis/kms/v1beta1.CryptoKey
-	// +crossplane:generate:reference:extractor=github.com/upbound/upjet/pkg/resource.ExtractResourceID()
 	// +kubebuilder:validation:Optional
 	KMSKeyName *string `json:"kmsKeyName,omitempty" tf:"kms_key_name,omitempty"`
+}
 
-	// Reference to a CryptoKey in kms to populate kmsKeyName.
-	// +kubebuilder:validation:Optional
-	KMSKeyNameRef *v1.Reference `json:"kmsKeyNameRef,omitempty" tf:"-"`
+type ExternalDatasetReferenceInitParameters struct {
 
-	// Selector for a CryptoKey in kms to populate kmsKeyName.
+	// The connection id that is used to access the externalSource.
+	// Format: projects/{projectId}/locations/{locationId}/connections/{connectionId}
+	Connection *string `json:"connection,omitempty" tf:"connection,omitempty"`
+
+	// External source that backs this dataset.
+	ExternalSource *string `json:"externalSource,omitempty" tf:"external_source,omitempty"`
+}
+
+type ExternalDatasetReferenceObservation struct {
+
+	// The connection id that is used to access the externalSource.
+	// Format: projects/{projectId}/locations/{locationId}/connections/{connectionId}
+	Connection *string `json:"connection,omitempty" tf:"connection,omitempty"`
+
+	// External source that backs this dataset.
+	ExternalSource *string `json:"externalSource,omitempty" tf:"external_source,omitempty"`
+}
+
+type ExternalDatasetReferenceParameters struct {
+
+	// The connection id that is used to access the externalSource.
+	// Format: projects/{projectId}/locations/{locationId}/connections/{connectionId}
 	// +kubebuilder:validation:Optional
-	KMSKeyNameSelector *v1.Selector `json:"kmsKeyNameSelector,omitempty" tf:"-"`
+	Connection *string `json:"connection,omitempty" tf:"connection,omitempty"`
+
+	// External source that backs this dataset.
+	// +kubebuilder:validation:Optional
+	ExternalSource *string `json:"externalSource,omitempty" tf:"external_source,omitempty"`
 }
 
 type RoutineInitParameters struct {
+
+	// The ID of the dataset containing this table.
+	DatasetID *string `json:"datasetId,omitempty" tf:"dataset_id,omitempty"`
+
+	// The ID of the project containing this table.
+	ProjectID *string `json:"projectId,omitempty" tf:"project_id,omitempty"`
+
+	// The ID of the routine. The ID must contain only letters (a-z,
+	// A-Z), numbers (0-9), or underscores (_). The maximum length
+	// is 256 characters.
+	RoutineID *string `json:"routineId,omitempty" tf:"routine_id,omitempty"`
 }
 
 type RoutineObservation struct {
@@ -500,47 +590,18 @@ type RoutineObservation struct {
 type RoutineParameters struct {
 
 	// The ID of the dataset containing this table.
-	// +crossplane:generate:reference:type=github.com/upbound/provider-gcp/apis/bigquery/v1beta1.Routine
-	// +crossplane:generate:reference:extractor=github.com/upbound/upjet/pkg/resource.ExtractParamPath("dataset_id",false)
 	// +kubebuilder:validation:Optional
 	DatasetID *string `json:"datasetId,omitempty" tf:"dataset_id,omitempty"`
 
-	// Reference to a Routine in bigquery to populate datasetId.
-	// +kubebuilder:validation:Optional
-	DatasetIDRef *v1.Reference `json:"datasetIdRef,omitempty" tf:"-"`
-
-	// Selector for a Routine in bigquery to populate datasetId.
-	// +kubebuilder:validation:Optional
-	DatasetIDSelector *v1.Selector `json:"datasetIdSelector,omitempty" tf:"-"`
-
 	// The ID of the project containing this table.
-	// +crossplane:generate:reference:type=github.com/upbound/provider-gcp/apis/bigquery/v1beta1.Routine
-	// +crossplane:generate:reference:extractor=github.com/upbound/upjet/pkg/resource.ExtractParamPath("project",false)
 	// +kubebuilder:validation:Optional
 	ProjectID *string `json:"projectId,omitempty" tf:"project_id,omitempty"`
-
-	// Reference to a Routine in bigquery to populate projectId.
-	// +kubebuilder:validation:Optional
-	ProjectIDRef *v1.Reference `json:"projectIdRef,omitempty" tf:"-"`
-
-	// Selector for a Routine in bigquery to populate projectId.
-	// +kubebuilder:validation:Optional
-	ProjectIDSelector *v1.Selector `json:"projectIdSelector,omitempty" tf:"-"`
 
 	// The ID of the routine. The ID must contain only letters (a-z,
 	// A-Z), numbers (0-9), or underscores (_). The maximum length
 	// is 256 characters.
-	// +crossplane:generate:reference:type=github.com/upbound/provider-gcp/apis/bigquery/v1beta1.Routine
 	// +kubebuilder:validation:Optional
 	RoutineID *string `json:"routineId,omitempty" tf:"routine_id,omitempty"`
-
-	// Reference to a Routine in bigquery to populate routineId.
-	// +kubebuilder:validation:Optional
-	RoutineIDRef *v1.Reference `json:"routineIdRef,omitempty" tf:"-"`
-
-	// Selector for a Routine in bigquery to populate routineId.
-	// +kubebuilder:validation:Optional
-	RoutineIDSelector *v1.Selector `json:"routineIdSelector,omitempty" tf:"-"`
 }
 
 type ViewInitParameters struct {

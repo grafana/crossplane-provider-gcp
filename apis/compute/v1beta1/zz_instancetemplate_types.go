@@ -25,105 +25,45 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
-type DiskDiskEncryptionKeyInitParameters struct {
+type AccessConfigInitParameters struct {
 
-	// The self link of the encryption key that is
-	// stored in Google Cloud KMS.
-	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
+	// The IP address that will be 1:1 mapped to the instance's
+	// network ip. If not given, one will be generated.
+	NATIP *string `json:"natIp,omitempty" tf:"nat_ip,omitempty"`
+
+	// The service-level to be provided for IPv6 traffic when the
+	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
+	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
 }
 
-type DiskDiskEncryptionKeyObservation struct {
+type AccessConfigObservation struct {
 
-	// The self link of the encryption key that is
-	// stored in Google Cloud KMS.
-	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
+	// The IP address that will be 1:1 mapped to the instance's
+	// network ip. If not given, one will be generated.
+	NATIP *string `json:"natIp,omitempty" tf:"nat_ip,omitempty"`
+
+	// The service-level to be provided for IPv6 traffic when the
+	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
+	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
+
+	// The name of the instance template.
+	PublicPtrDomainName *string `json:"publicPtrDomainName,omitempty" tf:"public_ptr_domain_name,omitempty"`
 }
 
-type DiskDiskEncryptionKeyParameters struct {
+type AccessConfigParameters struct {
 
-	// The self link of the encryption key that is
-	// stored in Google Cloud KMS.
+	// The IP address that will be 1:1 mapped to the instance's
+	// network ip. If not given, one will be generated.
 	// +kubebuilder:validation:Optional
-	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
-}
+	NATIP *string `json:"natIp,omitempty" tf:"nat_ip,omitempty"`
 
-type DiskSourceImageEncryptionKeyInitParameters struct {
-
-	// The self link of the encryption key that is
-	// stored in Google Cloud KMS.
-	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
-
-	// The service account being used for the
-	// encryption request for the given KMS key. If absent, the Compute Engine
-	// default service account is used.
-	KMSKeyServiceAccount *string `json:"kmsKeyServiceAccount,omitempty" tf:"kms_key_service_account,omitempty"`
-}
-
-type DiskSourceImageEncryptionKeyObservation struct {
-
-	// The self link of the encryption key that is
-	// stored in Google Cloud KMS.
-	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
-
-	// The service account being used for the
-	// encryption request for the given KMS key. If absent, the Compute Engine
-	// default service account is used.
-	KMSKeyServiceAccount *string `json:"kmsKeyServiceAccount,omitempty" tf:"kms_key_service_account,omitempty"`
-}
-
-type DiskSourceImageEncryptionKeyParameters struct {
-
-	// The self link of the encryption key that is
-	// stored in Google Cloud KMS.
+	// The service-level to be provided for IPv6 traffic when the
+	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
 	// +kubebuilder:validation:Optional
-	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
-
-	// The service account being used for the
-	// encryption request for the given KMS key. If absent, the Compute Engine
-	// default service account is used.
-	// +kubebuilder:validation:Optional
-	KMSKeyServiceAccount *string `json:"kmsKeyServiceAccount,omitempty" tf:"kms_key_service_account,omitempty"`
+	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
 }
 
-type DiskSourceSnapshotEncryptionKeyInitParameters struct {
-
-	// The self link of the encryption key that is
-	// stored in Google Cloud KMS.
-	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
-
-	// The service account being used for the
-	// encryption request for the given KMS key. If absent, the Compute Engine
-	// default service account is used.
-	KMSKeyServiceAccount *string `json:"kmsKeyServiceAccount,omitempty" tf:"kms_key_service_account,omitempty"`
-}
-
-type DiskSourceSnapshotEncryptionKeyObservation struct {
-
-	// The self link of the encryption key that is
-	// stored in Google Cloud KMS.
-	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
-
-	// The service account being used for the
-	// encryption request for the given KMS key. If absent, the Compute Engine
-	// default service account is used.
-	KMSKeyServiceAccount *string `json:"kmsKeyServiceAccount,omitempty" tf:"kms_key_service_account,omitempty"`
-}
-
-type DiskSourceSnapshotEncryptionKeyParameters struct {
-
-	// The self link of the encryption key that is
-	// stored in Google Cloud KMS.
-	// +kubebuilder:validation:Optional
-	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
-
-	// The service account being used for the
-	// encryption request for the given KMS key. If absent, the Compute Engine
-	// default service account is used.
-	// +kubebuilder:validation:Optional
-	KMSKeyServiceAccount *string `json:"kmsKeyServiceAccount,omitempty" tf:"kms_key_service_account,omitempty"`
-}
-
-type InstanceTemplateAdvancedMachineFeaturesInitParameters struct {
+type AdvancedMachineFeaturesInitParameters struct {
 
 	// Defines whether the instance should have nested virtualization enabled. Defaults to false.
 	EnableNestedVirtualization *bool `json:"enableNestedVirtualization,omitempty" tf:"enable_nested_virtualization,omitempty"`
@@ -135,7 +75,7 @@ type InstanceTemplateAdvancedMachineFeaturesInitParameters struct {
 	VisibleCoreCount *float64 `json:"visibleCoreCount,omitempty" tf:"visible_core_count,omitempty"`
 }
 
-type InstanceTemplateAdvancedMachineFeaturesObservation struct {
+type AdvancedMachineFeaturesObservation struct {
 
 	// Defines whether the instance should have nested virtualization enabled. Defaults to false.
 	EnableNestedVirtualization *bool `json:"enableNestedVirtualization,omitempty" tf:"enable_nested_virtualization,omitempty"`
@@ -147,7 +87,7 @@ type InstanceTemplateAdvancedMachineFeaturesObservation struct {
 	VisibleCoreCount *float64 `json:"visibleCoreCount,omitempty" tf:"visible_core_count,omitempty"`
 }
 
-type InstanceTemplateAdvancedMachineFeaturesParameters struct {
+type AdvancedMachineFeaturesParameters struct {
 
 	// Defines whether the instance should have nested virtualization enabled. Defaults to false.
 	// +kubebuilder:validation:Optional
@@ -162,26 +102,105 @@ type InstanceTemplateAdvancedMachineFeaturesParameters struct {
 	VisibleCoreCount *float64 `json:"visibleCoreCount,omitempty" tf:"visible_core_count,omitempty"`
 }
 
-type InstanceTemplateConfidentialInstanceConfigInitParameters struct {
+type AliasIPRangeInitParameters struct {
 
-	// Defines whether the instance should have confidential compute enabled. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM.
+	// The IP CIDR range represented by this alias IP range. This IP CIDR range
+	// must belong to the specified subnetwork and cannot contain IP addresses reserved by
+	// system or used by other network interfaces. At the time of writing only a
+	// netmask (e.g. /24) may be supplied, with a CIDR format resulting in an API
+	// error.
+	IPCidrRange *string `json:"ipCidrRange,omitempty" tf:"ip_cidr_range,omitempty"`
+
+	// The subnetwork secondary range name specifying
+	// the secondary range from which to allocate the IP CIDR range for this alias IP
+	// range. If left unspecified, the primary range of the subnetwork will be used.
+	SubnetworkRangeName *string `json:"subnetworkRangeName,omitempty" tf:"subnetwork_range_name,omitempty"`
+}
+
+type AliasIPRangeObservation struct {
+
+	// The IP CIDR range represented by this alias IP range. This IP CIDR range
+	// must belong to the specified subnetwork and cannot contain IP addresses reserved by
+	// system or used by other network interfaces. At the time of writing only a
+	// netmask (e.g. /24) may be supplied, with a CIDR format resulting in an API
+	// error.
+	IPCidrRange *string `json:"ipCidrRange,omitempty" tf:"ip_cidr_range,omitempty"`
+
+	// The subnetwork secondary range name specifying
+	// the secondary range from which to allocate the IP CIDR range for this alias IP
+	// range. If left unspecified, the primary range of the subnetwork will be used.
+	SubnetworkRangeName *string `json:"subnetworkRangeName,omitempty" tf:"subnetwork_range_name,omitempty"`
+}
+
+type AliasIPRangeParameters struct {
+
+	// The IP CIDR range represented by this alias IP range. This IP CIDR range
+	// must belong to the specified subnetwork and cannot contain IP addresses reserved by
+	// system or used by other network interfaces. At the time of writing only a
+	// netmask (e.g. /24) may be supplied, with a CIDR format resulting in an API
+	// error.
+	// +kubebuilder:validation:Optional
+	IPCidrRange *string `json:"ipCidrRange,omitempty" tf:"ip_cidr_range,omitempty"`
+
+	// The subnetwork secondary range name specifying
+	// the secondary range from which to allocate the IP CIDR range for this alias IP
+	// range. If left unspecified, the primary range of the subnetwork will be used.
+	// +kubebuilder:validation:Optional
+	SubnetworkRangeName *string `json:"subnetworkRangeName,omitempty" tf:"subnetwork_range_name,omitempty"`
+}
+
+type ConfidentialInstanceConfigInitParameters struct {
+
+	// Beta Defines the confidential computing technology the instance uses. SEV is an AMD feature. One of the following values: SEV, SEV_SNP. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM. If SEV_SNP, currently min_cpu_platform has to be set to "AMD Milan" or this will fail to create the VM.
+	ConfidentialInstanceType *string `json:"confidentialInstanceType,omitempty" tf:"confidential_instance_type,omitempty"`
+
+	// Defines whether the instance should have confidential compute enabled with AMD SEV. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM.
 	EnableConfidentialCompute *bool `json:"enableConfidentialCompute,omitempty" tf:"enable_confidential_compute,omitempty"`
 }
 
-type InstanceTemplateConfidentialInstanceConfigObservation struct {
+type ConfidentialInstanceConfigObservation struct {
 
-	// Defines whether the instance should have confidential compute enabled. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM.
+	// Beta Defines the confidential computing technology the instance uses. SEV is an AMD feature. One of the following values: SEV, SEV_SNP. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM. If SEV_SNP, currently min_cpu_platform has to be set to "AMD Milan" or this will fail to create the VM.
+	ConfidentialInstanceType *string `json:"confidentialInstanceType,omitempty" tf:"confidential_instance_type,omitempty"`
+
+	// Defines whether the instance should have confidential compute enabled with AMD SEV. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM.
 	EnableConfidentialCompute *bool `json:"enableConfidentialCompute,omitempty" tf:"enable_confidential_compute,omitempty"`
 }
 
-type InstanceTemplateConfidentialInstanceConfigParameters struct {
+type ConfidentialInstanceConfigParameters struct {
 
-	// Defines whether the instance should have confidential compute enabled. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM.
+	// Beta Defines the confidential computing technology the instance uses. SEV is an AMD feature. One of the following values: SEV, SEV_SNP. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM. If SEV_SNP, currently min_cpu_platform has to be set to "AMD Milan" or this will fail to create the VM.
+	// +kubebuilder:validation:Optional
+	ConfidentialInstanceType *string `json:"confidentialInstanceType,omitempty" tf:"confidential_instance_type,omitempty"`
+
+	// Defines whether the instance should have confidential compute enabled with AMD SEV. on_host_maintenance has to be set to TERMINATE or this will fail to create the VM.
 	// +kubebuilder:validation:Optional
 	EnableConfidentialCompute *bool `json:"enableConfidentialCompute,omitempty" tf:"enable_confidential_compute,omitempty"`
 }
 
-type InstanceTemplateDiskInitParameters struct {
+type DiskEncryptionKeyInitParameters struct {
+
+	// The self link of the encryption key that is
+	// stored in Google Cloud KMS.
+	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
+}
+
+type DiskEncryptionKeyObservation struct {
+
+	// The self link of the encryption key that is
+	// stored in Google Cloud KMS.
+	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
+}
+
+type DiskEncryptionKeyParameters struct {
+
+	// The self link of the encryption key that is
+	// stored in Google Cloud KMS.
+	// +kubebuilder:validation:Optional
+	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
+}
+
+type DiskInitParameters struct {
 
 	// Whether or not the disk should be auto-deleted.
 	// This defaults to true.
@@ -196,7 +215,7 @@ type InstanceTemplateDiskInitParameters struct {
 	DeviceName *string `json:"deviceName,omitempty" tf:"device_name,omitempty"`
 
 	// Encrypts or decrypts a disk using a customer-supplied encryption key.
-	DiskEncryptionKey []DiskDiskEncryptionKeyInitParameters `json:"diskEncryptionKey,omitempty" tf:"disk_encryption_key,omitempty"`
+	DiskEncryptionKey []DiskEncryptionKeyInitParameters `json:"diskEncryptionKey,omitempty" tf:"disk_encryption_key,omitempty"`
 
 	// Name of the disk. When not provided, this defaults
 	// to the name of the instance.
@@ -226,81 +245,14 @@ type InstanceTemplateDiskInitParameters struct {
 	// read-write mode.
 	Mode *string `json:"mode,omitempty" tf:"mode,omitempty"`
 
-	// - A list (short name or id) of resource policies to attach to this disk for automatic snapshot creations. Currently a max of 1 resource policy is supported.
-	ResourcePolicies []*string `json:"resourcePolicies,omitempty" tf:"resource_policies,omitempty"`
+	// Indicates how many IOPS to provision for the disk. This
+	// sets the number of I/O operations per second that the disk can handle.
+	// Values must be between 10,000 and 120,000. For more details, see the
+	// Extreme persistent disk documentation.
+	ProvisionedIops *float64 `json:"provisionedIops,omitempty" tf:"provisioned_iops,omitempty"`
 
-	// The image from which to
-	// initialize this disk. This can be one of: the image's self_link,
-	// projects/{project}/global/images/{image},
-	// projects/{project}/global/images/family/{family}, global/images/{image},
-	// global/images/family/{family}, family/{family}, {project}/{family},
-	// {project}/{image}, {family}, or {image}.
-	// ~> Note: Either source, source_image, or source_snapshot is required in a disk block unless the disk type is local-ssd. Check the API docs for details.
-	SourceImage *string `json:"sourceImage,omitempty" tf:"source_image,omitempty"`
-
-	// The customer-supplied encryption
-	// key of the source image. Required if the source image is protected by a
-	// customer-supplied encryption key.
-	SourceImageEncryptionKey []DiskSourceImageEncryptionKeyInitParameters `json:"sourceImageEncryptionKey,omitempty" tf:"source_image_encryption_key,omitempty"`
-
-	// The source snapshot to create this disk.
-	// ~> Note: Either source, source_image, or source_snapshot is required in a disk block unless the disk type is local-ssd. Check the API docs for details.
-	SourceSnapshot *string `json:"sourceSnapshot,omitempty" tf:"source_snapshot,omitempty"`
-
-	// The customer-supplied encryption
-	// key of the source snapshot. Structure
-	// documented below.
-	SourceSnapshotEncryptionKey []DiskSourceSnapshotEncryptionKeyInitParameters `json:"sourceSnapshotEncryptionKey,omitempty" tf:"source_snapshot_encryption_key,omitempty"`
-
-	// The type of GCE disk, can be either "SCRATCH" or
-	// "PERSISTENT".
-	Type *string `json:"type,omitempty" tf:"type,omitempty"`
-}
-
-type InstanceTemplateDiskObservation struct {
-
-	// Whether or not the disk should be auto-deleted.
-	// This defaults to true.
-	AutoDelete *bool `json:"autoDelete,omitempty" tf:"auto_delete,omitempty"`
-
-	// Indicates that this is a boot disk.
-	Boot *bool `json:"boot,omitempty" tf:"boot,omitempty"`
-
-	// A unique device name that is reflected into the
-	// /dev/  tree of a Linux operating system running within the instance. If not
-	// specified, the server chooses a default device name to apply to this disk.
-	DeviceName *string `json:"deviceName,omitempty" tf:"device_name,omitempty"`
-
-	// Encrypts or decrypts a disk using a customer-supplied encryption key.
-	DiskEncryptionKey []DiskDiskEncryptionKeyObservation `json:"diskEncryptionKey,omitempty" tf:"disk_encryption_key,omitempty"`
-
-	// Name of the disk. When not provided, this defaults
-	// to the name of the instance.
-	DiskName *string `json:"diskName,omitempty" tf:"disk_name,omitempty"`
-
-	// The size of the image in gigabytes. If not
-	// specified, it will inherit the size of its base image. For SCRATCH disks,
-	// the size must be exactly 375GB.
-	DiskSizeGb *float64 `json:"diskSizeGb,omitempty" tf:"disk_size_gb,omitempty"`
-
-	// The GCE disk type. Such as "pd-ssd", "local-ssd",
-	// "pd-balanced" or "pd-standard".
-	DiskType *string `json:"diskType,omitempty" tf:"disk_type,omitempty"`
-
-	// Specifies the disk interface to use for attaching this disk,
-	// which is either SCSI or NVME. The default is SCSI. Persistent disks must always use SCSI
-	// and the request will fail if you attempt to attach a persistent disk in any other format
-	// than SCSI. Local SSDs can use either NVME or SCSI.
-	Interface *string `json:"interface,omitempty" tf:"interface,omitempty"`
-
-	// A set of ket/value label pairs to assign to disk created from
-	// this template
-	Labels map[string]*string `json:"labels,omitempty" tf:"labels,omitempty"`
-
-	// The mode in which to attach this disk, either READ_WRITE
-	// or READ_ONLY. If you are attaching or creating a boot disk, this must
-	// read-write mode.
-	Mode *string `json:"mode,omitempty" tf:"mode,omitempty"`
+	// A set of key/value resource manager tag pairs to bind to this disk. Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/456.
+	ResourceManagerTags map[string]*string `json:"resourceManagerTags,omitempty" tf:"resource_manager_tags,omitempty"`
 
 	// - A list (short name or id) of resource policies to attach to this disk for automatic snapshot creations. Currently a max of 1 resource policy is supported.
 	ResourcePolicies []*string `json:"resourcePolicies,omitempty" tf:"resource_policies,omitempty"`
@@ -322,7 +274,7 @@ type InstanceTemplateDiskObservation struct {
 	// The customer-supplied encryption
 	// key of the source image. Required if the source image is protected by a
 	// customer-supplied encryption key.
-	SourceImageEncryptionKey []DiskSourceImageEncryptionKeyObservation `json:"sourceImageEncryptionKey,omitempty" tf:"source_image_encryption_key,omitempty"`
+	SourceImageEncryptionKey []SourceImageEncryptionKeyInitParameters `json:"sourceImageEncryptionKey,omitempty" tf:"source_image_encryption_key,omitempty"`
 
 	// The source snapshot to create this disk.
 	// ~> Note: Either source, source_image, or source_snapshot is required in a disk block unless the disk type is local-ssd. Check the API docs for details.
@@ -331,14 +283,104 @@ type InstanceTemplateDiskObservation struct {
 	// The customer-supplied encryption
 	// key of the source snapshot. Structure
 	// documented below.
-	SourceSnapshotEncryptionKey []DiskSourceSnapshotEncryptionKeyObservation `json:"sourceSnapshotEncryptionKey,omitempty" tf:"source_snapshot_encryption_key,omitempty"`
+	SourceSnapshotEncryptionKey []SourceSnapshotEncryptionKeyInitParameters `json:"sourceSnapshotEncryptionKey,omitempty" tf:"source_snapshot_encryption_key,omitempty"`
 
 	// The type of GCE disk, can be either "SCRATCH" or
 	// "PERSISTENT".
 	Type *string `json:"type,omitempty" tf:"type,omitempty"`
 }
 
-type InstanceTemplateDiskParameters struct {
+type DiskObservation struct {
+
+	// Whether or not the disk should be auto-deleted.
+	// This defaults to true.
+	AutoDelete *bool `json:"autoDelete,omitempty" tf:"auto_delete,omitempty"`
+
+	// Indicates that this is a boot disk.
+	Boot *bool `json:"boot,omitempty" tf:"boot,omitempty"`
+
+	// A unique device name that is reflected into the
+	// /dev/  tree of a Linux operating system running within the instance. If not
+	// specified, the server chooses a default device name to apply to this disk.
+	DeviceName *string `json:"deviceName,omitempty" tf:"device_name,omitempty"`
+
+	// Encrypts or decrypts a disk using a customer-supplied encryption key.
+	DiskEncryptionKey []DiskEncryptionKeyObservation `json:"diskEncryptionKey,omitempty" tf:"disk_encryption_key,omitempty"`
+
+	// Name of the disk. When not provided, this defaults
+	// to the name of the instance.
+	DiskName *string `json:"diskName,omitempty" tf:"disk_name,omitempty"`
+
+	// The size of the image in gigabytes. If not
+	// specified, it will inherit the size of its base image. For SCRATCH disks,
+	// the size must be exactly 375GB.
+	DiskSizeGb *float64 `json:"diskSizeGb,omitempty" tf:"disk_size_gb,omitempty"`
+
+	// The GCE disk type. Such as "pd-ssd", "local-ssd",
+	// "pd-balanced" or "pd-standard".
+	DiskType *string `json:"diskType,omitempty" tf:"disk_type,omitempty"`
+
+	// Specifies the disk interface to use for attaching this disk,
+	// which is either SCSI or NVME. The default is SCSI. Persistent disks must always use SCSI
+	// and the request will fail if you attempt to attach a persistent disk in any other format
+	// than SCSI. Local SSDs can use either NVME or SCSI.
+	Interface *string `json:"interface,omitempty" tf:"interface,omitempty"`
+
+	// A set of ket/value label pairs to assign to disk created from
+	// this template
+	Labels map[string]*string `json:"labels,omitempty" tf:"labels,omitempty"`
+
+	// The mode in which to attach this disk, either READ_WRITE
+	// or READ_ONLY. If you are attaching or creating a boot disk, this must
+	// read-write mode.
+	Mode *string `json:"mode,omitempty" tf:"mode,omitempty"`
+
+	// Indicates how many IOPS to provision for the disk. This
+	// sets the number of I/O operations per second that the disk can handle.
+	// Values must be between 10,000 and 120,000. For more details, see the
+	// Extreme persistent disk documentation.
+	ProvisionedIops *float64 `json:"provisionedIops,omitempty" tf:"provisioned_iops,omitempty"`
+
+	// A set of key/value resource manager tag pairs to bind to this disk. Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/456.
+	ResourceManagerTags map[string]*string `json:"resourceManagerTags,omitempty" tf:"resource_manager_tags,omitempty"`
+
+	// - A list (short name or id) of resource policies to attach to this disk for automatic snapshot creations. Currently a max of 1 resource policy is supported.
+	ResourcePolicies []*string `json:"resourcePolicies,omitempty" tf:"resource_policies,omitempty"`
+
+	// The name (not self_link)
+	// of the disk (such as those managed by google_compute_disk) to attach.
+	// ~> Note: Either source, source_image, or source_snapshot is required in a disk block unless the disk type is local-ssd. Check the API docs for details.
+	Source *string `json:"source,omitempty" tf:"source,omitempty"`
+
+	// The image from which to
+	// initialize this disk. This can be one of: the image's self_link,
+	// projects/{project}/global/images/{image},
+	// projects/{project}/global/images/family/{family}, global/images/{image},
+	// global/images/family/{family}, family/{family}, {project}/{family},
+	// {project}/{image}, {family}, or {image}.
+	// ~> Note: Either source, source_image, or source_snapshot is required in a disk block unless the disk type is local-ssd. Check the API docs for details.
+	SourceImage *string `json:"sourceImage,omitempty" tf:"source_image,omitempty"`
+
+	// The customer-supplied encryption
+	// key of the source image. Required if the source image is protected by a
+	// customer-supplied encryption key.
+	SourceImageEncryptionKey []SourceImageEncryptionKeyObservation `json:"sourceImageEncryptionKey,omitempty" tf:"source_image_encryption_key,omitempty"`
+
+	// The source snapshot to create this disk.
+	// ~> Note: Either source, source_image, or source_snapshot is required in a disk block unless the disk type is local-ssd. Check the API docs for details.
+	SourceSnapshot *string `json:"sourceSnapshot,omitempty" tf:"source_snapshot,omitempty"`
+
+	// The customer-supplied encryption
+	// key of the source snapshot. Structure
+	// documented below.
+	SourceSnapshotEncryptionKey []SourceSnapshotEncryptionKeyObservation `json:"sourceSnapshotEncryptionKey,omitempty" tf:"source_snapshot_encryption_key,omitempty"`
+
+	// The type of GCE disk, can be either "SCRATCH" or
+	// "PERSISTENT".
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+}
+
+type DiskParameters struct {
 
 	// Whether or not the disk should be auto-deleted.
 	// This defaults to true.
@@ -357,7 +399,7 @@ type InstanceTemplateDiskParameters struct {
 
 	// Encrypts or decrypts a disk using a customer-supplied encryption key.
 	// +kubebuilder:validation:Optional
-	DiskEncryptionKey []DiskDiskEncryptionKeyParameters `json:"diskEncryptionKey,omitempty" tf:"disk_encryption_key,omitempty"`
+	DiskEncryptionKey []DiskEncryptionKeyParameters `json:"diskEncryptionKey,omitempty" tf:"disk_encryption_key,omitempty"`
 
 	// Name of the disk. When not provided, this defaults
 	// to the name of the instance.
@@ -393,6 +435,17 @@ type InstanceTemplateDiskParameters struct {
 	// +kubebuilder:validation:Optional
 	Mode *string `json:"mode,omitempty" tf:"mode,omitempty"`
 
+	// Indicates how many IOPS to provision for the disk. This
+	// sets the number of I/O operations per second that the disk can handle.
+	// Values must be between 10,000 and 120,000. For more details, see the
+	// Extreme persistent disk documentation.
+	// +kubebuilder:validation:Optional
+	ProvisionedIops *float64 `json:"provisionedIops,omitempty" tf:"provisioned_iops,omitempty"`
+
+	// A set of key/value resource manager tag pairs to bind to this disk. Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/456.
+	// +kubebuilder:validation:Optional
+	ResourceManagerTags map[string]*string `json:"resourceManagerTags,omitempty" tf:"resource_manager_tags,omitempty"`
+
 	// - A list (short name or id) of resource policies to attach to this disk for automatic snapshot creations. Currently a max of 1 resource policy is supported.
 	// +kubebuilder:validation:Optional
 	ResourcePolicies []*string `json:"resourcePolicies,omitempty" tf:"resource_policies,omitempty"`
@@ -400,7 +453,6 @@ type InstanceTemplateDiskParameters struct {
 	// The name (not self_link)
 	// of the disk (such as those managed by google_compute_disk) to attach.
 	// ~> Note: Either source, source_image, or source_snapshot is required in a disk block unless the disk type is local-ssd. Check the API docs for details.
-	// +crossplane:generate:reference:type=github.com/upbound/provider-gcp/apis/compute/v1beta1.Disk
 	// +kubebuilder:validation:Optional
 	Source *string `json:"source,omitempty" tf:"source,omitempty"`
 
@@ -418,15 +470,7 @@ type InstanceTemplateDiskParameters struct {
 	// key of the source image. Required if the source image is protected by a
 	// customer-supplied encryption key.
 	// +kubebuilder:validation:Optional
-	SourceImageEncryptionKey []DiskSourceImageEncryptionKeyParameters `json:"sourceImageEncryptionKey,omitempty" tf:"source_image_encryption_key,omitempty"`
-
-	// Reference to a Disk in compute to populate source.
-	// +kubebuilder:validation:Optional
-	SourceRef *v1.Reference `json:"sourceRef,omitempty" tf:"-"`
-
-	// Selector for a Disk in compute to populate source.
-	// +kubebuilder:validation:Optional
-	SourceSelector *v1.Selector `json:"sourceSelector,omitempty" tf:"-"`
+	SourceImageEncryptionKey []SourceImageEncryptionKeyParameters `json:"sourceImageEncryptionKey,omitempty" tf:"source_image_encryption_key,omitempty"`
 
 	// The source snapshot to create this disk.
 	// ~> Note: Either source, source_image, or source_snapshot is required in a disk block unless the disk type is local-ssd. Check the API docs for details.
@@ -437,7 +481,7 @@ type InstanceTemplateDiskParameters struct {
 	// key of the source snapshot. Structure
 	// documented below.
 	// +kubebuilder:validation:Optional
-	SourceSnapshotEncryptionKey []DiskSourceSnapshotEncryptionKeyParameters `json:"sourceSnapshotEncryptionKey,omitempty" tf:"source_snapshot_encryption_key,omitempty"`
+	SourceSnapshotEncryptionKey []SourceSnapshotEncryptionKeyParameters `json:"sourceSnapshotEncryptionKey,omitempty" tf:"source_snapshot_encryption_key,omitempty"`
 
 	// The type of GCE disk, can be either "SCRATCH" or
 	// "PERSISTENT".
@@ -445,7 +489,7 @@ type InstanceTemplateDiskParameters struct {
 	Type *string `json:"type,omitempty" tf:"type,omitempty"`
 }
 
-type InstanceTemplateGuestAcceleratorInitParameters struct {
+type GuestAcceleratorInitParameters struct {
 
 	// The number of the guest accelerator cards exposed to this instance.
 	Count *float64 `json:"count,omitempty" tf:"count,omitempty"`
@@ -454,7 +498,7 @@ type InstanceTemplateGuestAcceleratorInitParameters struct {
 	Type *string `json:"type,omitempty" tf:"type,omitempty"`
 }
 
-type InstanceTemplateGuestAcceleratorObservation struct {
+type GuestAcceleratorObservation struct {
 
 	// The number of the guest accelerator cards exposed to this instance.
 	Count *float64 `json:"count,omitempty" tf:"count,omitempty"`
@@ -463,7 +507,7 @@ type InstanceTemplateGuestAcceleratorObservation struct {
 	Type *string `json:"type,omitempty" tf:"type,omitempty"`
 }
 
-type InstanceTemplateGuestAcceleratorParameters struct {
+type GuestAcceleratorParameters struct {
 
 	// The number of the guest accelerator cards exposed to this instance.
 	// +kubebuilder:validation:Optional
@@ -472,19 +516,50 @@ type InstanceTemplateGuestAcceleratorParameters struct {
 	// The accelerator type resource to expose to this instance. E.g. nvidia-tesla-k80.
 	// +kubebuilder:validation:Optional
 	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+}
+
+type IPv6AccessConfigInitParameters struct {
+
+	// The service-level to be provided for IPv6 traffic when the
+	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
+	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
+}
+
+type IPv6AccessConfigObservation struct {
+	ExternalIPv6 *string `json:"externalIpv6,omitempty" tf:"external_ipv6,omitempty"`
+
+	ExternalIPv6PrefixLength *string `json:"externalIpv6PrefixLength,omitempty" tf:"external_ipv6_prefix_length,omitempty"`
+
+	// The name of the instance template.
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// The service-level to be provided for IPv6 traffic when the
+	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
+	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
+
+	// The name of the instance template.
+	PublicPtrDomainName *string `json:"publicPtrDomainName,omitempty" tf:"public_ptr_domain_name,omitempty"`
+}
+
+type IPv6AccessConfigParameters struct {
+
+	// The service-level to be provided for IPv6 traffic when the
+	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
+	// +kubebuilder:validation:Optional
+	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
 }
 
 type InstanceTemplateInitParameters struct {
 
 	// Configure Nested Virtualisation and Simultaneous Hyper Threading on this VM. Structure is documented below
-	AdvancedMachineFeatures []InstanceTemplateAdvancedMachineFeaturesInitParameters `json:"advancedMachineFeatures,omitempty" tf:"advanced_machine_features,omitempty"`
+	AdvancedMachineFeatures []AdvancedMachineFeaturesInitParameters `json:"advancedMachineFeatures,omitempty" tf:"advanced_machine_features,omitempty"`
 
 	// Whether to allow sending and receiving of
 	// packets with non-matching source or destination IPs. This defaults to false.
 	CanIPForward *bool `json:"canIpForward,omitempty" tf:"can_ip_forward,omitempty"`
 
 	// Enable Confidential Mode on this VM. Structure is documented below
-	ConfidentialInstanceConfig []InstanceTemplateConfidentialInstanceConfigInitParameters `json:"confidentialInstanceConfig,omitempty" tf:"confidential_instance_config,omitempty"`
+	ConfidentialInstanceConfig []ConfidentialInstanceConfigInitParameters `json:"confidentialInstanceConfig,omitempty" tf:"confidential_instance_config,omitempty"`
 
 	// A brief description of this resource.
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
@@ -492,10 +567,14 @@ type InstanceTemplateInitParameters struct {
 	// Disks to attach to instances created from this template.
 	// This can be specified multiple times for multiple disks. Structure is
 	// documented below.
-	Disk []InstanceTemplateDiskInitParameters `json:"disk,omitempty" tf:"disk,omitempty"`
+	Disk []DiskInitParameters `json:"disk,omitempty" tf:"disk,omitempty"`
+
+	// Enable Virtual Displays on this instance.
+	// Note: allow_stopping_for_update must be set to true in order to update this field.
+	EnableDisplay *bool `json:"enableDisplay,omitempty" tf:"enable_display,omitempty"`
 
 	// List of the type and count of accelerator cards attached to the instance. Structure documented below.
-	GuestAccelerator []InstanceTemplateGuestAcceleratorInitParameters `json:"guestAccelerator,omitempty" tf:"guest_accelerator,omitempty"`
+	GuestAccelerator []GuestAcceleratorInitParameters `json:"guestAccelerator,omitempty" tf:"guest_accelerator,omitempty"`
 
 	// A brief description to use for instances
 	// created from this template.
@@ -532,7 +611,11 @@ type InstanceTemplateInitParameters struct {
 	// Networks to attach to instances created from
 	// this template. This can be specified multiple times for multiple networks.
 	// Structure is documented below.
-	NetworkInterface []InstanceTemplateNetworkInterfaceInitParameters `json:"networkInterface,omitempty" tf:"network_interface,omitempty"`
+	NetworkInterface []NetworkInterfaceInitParameters `json:"networkInterface,omitempty" tf:"network_interface,omitempty"`
+
+	// os-features, and network_interface.0.nic-type must be GVNIC
+	// in order for this setting to take effect.
+	NetworkPerformanceConfig []NetworkPerformanceConfigInitParameters `json:"networkPerformanceConfig,omitempty" tf:"network_performance_config,omitempty"`
 
 	// The ID of the project in which the resource belongs. If it
 	// is not provided, the provider project is used.
@@ -548,155 +631,397 @@ type InstanceTemplateInitParameters struct {
 
 	// Specifies the reservations that this instance can consume from.
 	// Structure is documented below.
-	ReservationAffinity []InstanceTemplateReservationAffinityInitParameters `json:"reservationAffinity,omitempty" tf:"reservation_affinity,omitempty"`
+	ReservationAffinity []ReservationAffinityInitParameters `json:"reservationAffinity,omitempty" tf:"reservation_affinity,omitempty"`
+
+	// A set of key/value resource manager tag pairs to bind to the instances. Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/456.
+	ResourceManagerTags map[string]*string `json:"resourceManagerTags,omitempty" tf:"resource_manager_tags,omitempty"`
 
 	// - A list of self_links of resource policies to attach to the instance. Modifying this list will cause the instance to recreate. Currently a max of 1 resource policy is supported.
 	ResourcePolicies []*string `json:"resourcePolicies,omitempty" tf:"resource_policies,omitempty"`
 
 	// The scheduling strategy to use. More details about
 	// this configuration option are detailed below.
-	Scheduling []InstanceTemplateSchedulingInitParameters `json:"scheduling,omitempty" tf:"scheduling,omitempty"`
+	Scheduling []SchedulingInitParameters `json:"scheduling,omitempty" tf:"scheduling,omitempty"`
 
 	// Service account to attach to the instance. Structure is documented below.
-	ServiceAccount []InstanceTemplateServiceAccountInitParameters `json:"serviceAccount,omitempty" tf:"service_account,omitempty"`
+	ServiceAccount []ServiceAccountInitParameters `json:"serviceAccount,omitempty" tf:"service_account,omitempty"`
 
 	// Enable Shielded VM on this instance. Shielded VM provides verifiable integrity to prevent against malware and rootkits. Defaults to disabled. Structure is documented below.
 	// Note: shielded_instance_config can only be used with boot images with shielded vm support. See the complete list here.
-	ShieldedInstanceConfig []InstanceTemplateShieldedInstanceConfigInitParameters `json:"shieldedInstanceConfig,omitempty" tf:"shielded_instance_config,omitempty"`
+	ShieldedInstanceConfig []ShieldedInstanceConfigInitParameters `json:"shieldedInstanceConfig,omitempty" tf:"shielded_instance_config,omitempty"`
 
 	// Tags to attach to the instance.
 	Tags []*string `json:"tags,omitempty" tf:"tags,omitempty"`
 }
 
-type InstanceTemplateNetworkInterfaceAccessConfigInitParameters struct {
+type InstanceTemplateObservation struct {
 
-	// The IP address that will be 1:1 mapped to the instance's
-	// network ip. If not given, one will be generated.
-	NATIP *string `json:"natIp,omitempty" tf:"nat_ip,omitempty"`
+	// Configure Nested Virtualisation and Simultaneous Hyper Threading on this VM. Structure is documented below
+	AdvancedMachineFeatures []AdvancedMachineFeaturesObservation `json:"advancedMachineFeatures,omitempty" tf:"advanced_machine_features,omitempty"`
 
-	// The service-level to be provided for IPv6 traffic when the
-	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
-	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
-}
+	// Whether to allow sending and receiving of
+	// packets with non-matching source or destination IPs. This defaults to false.
+	CanIPForward *bool `json:"canIpForward,omitempty" tf:"can_ip_forward,omitempty"`
 
-type InstanceTemplateNetworkInterfaceAccessConfigObservation struct {
+	// Enable Confidential Mode on this VM. Structure is documented below
+	ConfidentialInstanceConfig []ConfidentialInstanceConfigObservation `json:"confidentialInstanceConfig,omitempty" tf:"confidential_instance_config,omitempty"`
 
-	// The IP address that will be 1:1 mapped to the instance's
-	// network ip. If not given, one will be generated.
-	NATIP *string `json:"natIp,omitempty" tf:"nat_ip,omitempty"`
+	// A brief description of this resource.
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
 
-	// The service-level to be provided for IPv6 traffic when the
-	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
-	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
+	// Disks to attach to instances created from this template.
+	// This can be specified multiple times for multiple disks. Structure is
+	// documented below.
+	Disk []DiskObservation `json:"disk,omitempty" tf:"disk,omitempty"`
 
-	// The name of the instance template.
-	PublicPtrDomainName *string `json:"publicPtrDomainName,omitempty" tf:"public_ptr_domain_name,omitempty"`
-}
+	EffectiveLabels map[string]*string `json:"effectiveLabels,omitempty" tf:"effective_labels,omitempty"`
 
-type InstanceTemplateNetworkInterfaceAccessConfigParameters struct {
+	// Enable Virtual Displays on this instance.
+	// Note: allow_stopping_for_update must be set to true in order to update this field.
+	EnableDisplay *bool `json:"enableDisplay,omitempty" tf:"enable_display,omitempty"`
 
-	// The IP address that will be 1:1 mapped to the instance's
-	// network ip. If not given, one will be generated.
-	// +kubebuilder:validation:Optional
-	NATIP *string `json:"natIp,omitempty" tf:"nat_ip,omitempty"`
+	// List of the type and count of accelerator cards attached to the instance. Structure documented below.
+	GuestAccelerator []GuestAcceleratorObservation `json:"guestAccelerator,omitempty" tf:"guest_accelerator,omitempty"`
 
-	// The service-level to be provided for IPv6 traffic when the
-	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
-	// +kubebuilder:validation:Optional
-	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
-}
+	// an identifier for the resource with format projects/{{project}}/global/instanceTemplates/{{name}}
+	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
-type InstanceTemplateNetworkInterfaceAliasIPRangeInitParameters struct {
+	// A brief description to use for instances
+	// created from this template.
+	InstanceDescription *string `json:"instanceDescription,omitempty" tf:"instance_description,omitempty"`
 
-	// The IP CIDR range represented by this alias IP range. This IP CIDR range
-	// must belong to the specified subnetwork and cannot contain IP addresses reserved by
-	// system or used by other network interfaces. At the time of writing only a
-	// netmask (e.g. /24) may be supplied, with a CIDR format resulting in an API
-	// error.
-	IPCidrRange *string `json:"ipCidrRange,omitempty" tf:"ip_cidr_range,omitempty"`
+	// A set of key/value label pairs to assign to instances
+	// created from this template.
+	Labels map[string]*string `json:"labels,omitempty" tf:"labels,omitempty"`
 
-	// The subnetwork secondary range name specifying
-	// the secondary range from which to allocate the IP CIDR range for this alias IP
-	// range. If left unspecified, the primary range of the subnetwork will be used.
-	SubnetworkRangeName *string `json:"subnetworkRangeName,omitempty" tf:"subnetwork_range_name,omitempty"`
-}
+	// The machine type to create.
+	MachineType *string `json:"machineType,omitempty" tf:"machine_type,omitempty"`
 
-type InstanceTemplateNetworkInterfaceAliasIPRangeObservation struct {
+	// Metadata key/value pairs to make available from
+	// within instances created from this template.
+	Metadata map[string]string `json:"metadata,omitempty" tf:"metadata,omitempty"`
 
-	// The IP CIDR range represented by this alias IP range. This IP CIDR range
-	// must belong to the specified subnetwork and cannot contain IP addresses reserved by
-	// system or used by other network interfaces. At the time of writing only a
-	// netmask (e.g. /24) may be supplied, with a CIDR format resulting in an API
-	// error.
-	IPCidrRange *string `json:"ipCidrRange,omitempty" tf:"ip_cidr_range,omitempty"`
+	// The unique fingerprint of the metadata.
+	MetadataFingerprint *string `json:"metadataFingerprint,omitempty" tf:"metadata_fingerprint,omitempty"`
 
-	// The subnetwork secondary range name specifying
-	// the secondary range from which to allocate the IP CIDR range for this alias IP
-	// range. If left unspecified, the primary range of the subnetwork will be used.
-	SubnetworkRangeName *string `json:"subnetworkRangeName,omitempty" tf:"subnetwork_range_name,omitempty"`
-}
+	// An alternative to using the
+	// startup-script metadata key, mostly to match the compute_instance resource.
+	// This replaces the startup-script metadata key on the created instance and
+	// thus the two mechanisms are not allowed to be used simultaneously.
+	MetadataStartupScript *string `json:"metadataStartupScript,omitempty" tf:"metadata_startup_script,omitempty"`
 
-type InstanceTemplateNetworkInterfaceAliasIPRangeParameters struct {
-
-	// The IP CIDR range represented by this alias IP range. This IP CIDR range
-	// must belong to the specified subnetwork and cannot contain IP addresses reserved by
-	// system or used by other network interfaces. At the time of writing only a
-	// netmask (e.g. /24) may be supplied, with a CIDR format resulting in an API
-	// error.
-	// +kubebuilder:validation:Optional
-	IPCidrRange *string `json:"ipCidrRange,omitempty" tf:"ip_cidr_range,omitempty"`
-
-	// The subnetwork secondary range name specifying
-	// the secondary range from which to allocate the IP CIDR range for this alias IP
-	// range. If left unspecified, the primary range of the subnetwork will be used.
-	// +kubebuilder:validation:Optional
-	SubnetworkRangeName *string `json:"subnetworkRangeName,omitempty" tf:"subnetwork_range_name,omitempty"`
-}
-
-type InstanceTemplateNetworkInterfaceIPv6AccessConfigInitParameters struct {
-
-	// The service-level to be provided for IPv6 traffic when the
-	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
-	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
-}
-
-type InstanceTemplateNetworkInterfaceIPv6AccessConfigObservation struct {
-	ExternalIPv6 *string `json:"externalIpv6,omitempty" tf:"external_ipv6,omitempty"`
-
-	ExternalIPv6PrefixLength *string `json:"externalIpv6PrefixLength,omitempty" tf:"external_ipv6_prefix_length,omitempty"`
-
-	// The service-level to be provided for IPv6 traffic when the
-	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
-	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
+	// Specifies a minimum CPU platform. Applicable values are the friendly names of CPU platforms, such as
+	// Intel Haswell or Intel Skylake. See the complete list here.
+	MinCPUPlatform *string `json:"minCpuPlatform,omitempty" tf:"min_cpu_platform,omitempty"`
 
 	// The name of the instance template.
-	PublicPtrDomainName *string `json:"publicPtrDomainName,omitempty" tf:"public_ptr_domain_name,omitempty"`
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// Creates a unique name beginning with the specified
+	// prefix. Conflicts with name.
+	NamePrefix *string `json:"namePrefix,omitempty" tf:"name_prefix,omitempty"`
+
+	// Networks to attach to instances created from
+	// this template. This can be specified multiple times for multiple networks.
+	// Structure is documented below.
+	NetworkInterface []NetworkInterfaceObservation `json:"networkInterface,omitempty" tf:"network_interface,omitempty"`
+
+	// os-features, and network_interface.0.nic-type must be GVNIC
+	// in order for this setting to take effect.
+	NetworkPerformanceConfig []NetworkPerformanceConfigObservation `json:"networkPerformanceConfig,omitempty" tf:"network_performance_config,omitempty"`
+
+	// The ID of the project in which the resource belongs. If it
+	// is not provided, the provider project is used.
+	Project *string `json:"project,omitempty" tf:"project,omitempty"`
+
+	// An instance template is a global resource that is not
+	// bound to a zone or a region. However, you can still specify some regional
+	// resources in an instance template, which restricts the template to the
+	// region where that resource resides. For example, a custom subnetwork
+	// resource is tied to a specific region. Defaults to the region of the
+	// Provider if no value is given.
+	Region *string `json:"region,omitempty" tf:"region,omitempty"`
+
+	// Specifies the reservations that this instance can consume from.
+	// Structure is documented below.
+	ReservationAffinity []ReservationAffinityObservation `json:"reservationAffinity,omitempty" tf:"reservation_affinity,omitempty"`
+
+	// A set of key/value resource manager tag pairs to bind to the instances. Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/456.
+	ResourceManagerTags map[string]*string `json:"resourceManagerTags,omitempty" tf:"resource_manager_tags,omitempty"`
+
+	// - A list of self_links of resource policies to attach to the instance. Modifying this list will cause the instance to recreate. Currently a max of 1 resource policy is supported.
+	ResourcePolicies []*string `json:"resourcePolicies,omitempty" tf:"resource_policies,omitempty"`
+
+	// The scheduling strategy to use. More details about
+	// this configuration option are detailed below.
+	Scheduling []SchedulingObservation `json:"scheduling,omitempty" tf:"scheduling,omitempty"`
+
+	// The URI of the created resource.
+	SelfLink *string `json:"selfLink,omitempty" tf:"self_link,omitempty"`
+
+	// A special URI of the created resource that uniquely identifies this instance template with the following format: projects/{{project}}/global/instanceTemplates/{{name}}?uniqueId={{uniqueId}}
+	// Referencing an instance template via this attribute prevents Time of Check to Time of Use attacks when the instance template resides in a shared/untrusted environment.
+	SelfLinkUnique *string `json:"selfLinkUnique,omitempty" tf:"self_link_unique,omitempty"`
+
+	// Service account to attach to the instance. Structure is documented below.
+	ServiceAccount []ServiceAccountObservation `json:"serviceAccount,omitempty" tf:"service_account,omitempty"`
+
+	// Enable Shielded VM on this instance. Shielded VM provides verifiable integrity to prevent against malware and rootkits. Defaults to disabled. Structure is documented below.
+	// Note: shielded_instance_config can only be used with boot images with shielded vm support. See the complete list here.
+	ShieldedInstanceConfig []ShieldedInstanceConfigObservation `json:"shieldedInstanceConfig,omitempty" tf:"shielded_instance_config,omitempty"`
+
+	// Tags to attach to the instance.
+	Tags []*string `json:"tags,omitempty" tf:"tags,omitempty"`
+
+	// The unique fingerprint of the tags.
+	TagsFingerprint *string `json:"tagsFingerprint,omitempty" tf:"tags_fingerprint,omitempty"`
+
+	// The combination of labels configured directly on the resource and default labels configured on the provider.
+	TerraformLabels map[string]*string `json:"terraformLabels,omitempty" tf:"terraform_labels,omitempty"`
 }
 
-type InstanceTemplateNetworkInterfaceIPv6AccessConfigParameters struct {
+type InstanceTemplateParameters struct {
 
-	// The service-level to be provided for IPv6 traffic when the
-	// subnet has an external subnet. Only PREMIUM and STANDARD tier is valid for IPv6.
+	// Configure Nested Virtualisation and Simultaneous Hyper Threading on this VM. Structure is documented below
 	// +kubebuilder:validation:Optional
-	NetworkTier *string `json:"networkTier,omitempty" tf:"network_tier,omitempty"`
+	AdvancedMachineFeatures []AdvancedMachineFeaturesParameters `json:"advancedMachineFeatures,omitempty" tf:"advanced_machine_features,omitempty"`
+
+	// Whether to allow sending and receiving of
+	// packets with non-matching source or destination IPs. This defaults to false.
+	// +kubebuilder:validation:Optional
+	CanIPForward *bool `json:"canIpForward,omitempty" tf:"can_ip_forward,omitempty"`
+
+	// Enable Confidential Mode on this VM. Structure is documented below
+	// +kubebuilder:validation:Optional
+	ConfidentialInstanceConfig []ConfidentialInstanceConfigParameters `json:"confidentialInstanceConfig,omitempty" tf:"confidential_instance_config,omitempty"`
+
+	// A brief description of this resource.
+	// +kubebuilder:validation:Optional
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// Disks to attach to instances created from this template.
+	// This can be specified multiple times for multiple disks. Structure is
+	// documented below.
+	// +kubebuilder:validation:Optional
+	Disk []DiskParameters `json:"disk,omitempty" tf:"disk,omitempty"`
+
+	// Enable Virtual Displays on this instance.
+	// Note: allow_stopping_for_update must be set to true in order to update this field.
+	// +kubebuilder:validation:Optional
+	EnableDisplay *bool `json:"enableDisplay,omitempty" tf:"enable_display,omitempty"`
+
+	// List of the type and count of accelerator cards attached to the instance. Structure documented below.
+	// +kubebuilder:validation:Optional
+	GuestAccelerator []GuestAcceleratorParameters `json:"guestAccelerator,omitempty" tf:"guest_accelerator,omitempty"`
+
+	// A brief description to use for instances
+	// created from this template.
+	// +kubebuilder:validation:Optional
+	InstanceDescription *string `json:"instanceDescription,omitempty" tf:"instance_description,omitempty"`
+
+	// A set of key/value label pairs to assign to instances
+	// created from this template.
+	// +kubebuilder:validation:Optional
+	Labels map[string]*string `json:"labels,omitempty" tf:"labels,omitempty"`
+
+	// The machine type to create.
+	// +kubebuilder:validation:Optional
+	MachineType *string `json:"machineType,omitempty" tf:"machine_type,omitempty"`
+
+	// Metadata key/value pairs to make available from
+	// within instances created from this template.
+	// +kubebuilder:validation:Optional
+	Metadata map[string]string `json:"metadata,omitempty" tf:"metadata,omitempty"`
+
+	// An alternative to using the
+	// startup-script metadata key, mostly to match the compute_instance resource.
+	// This replaces the startup-script metadata key on the created instance and
+	// thus the two mechanisms are not allowed to be used simultaneously.
+	// +kubebuilder:validation:Optional
+	MetadataStartupScript *string `json:"metadataStartupScript,omitempty" tf:"metadata_startup_script,omitempty"`
+
+	// Specifies a minimum CPU platform. Applicable values are the friendly names of CPU platforms, such as
+	// Intel Haswell or Intel Skylake. See the complete list here.
+	// +kubebuilder:validation:Optional
+	MinCPUPlatform *string `json:"minCpuPlatform,omitempty" tf:"min_cpu_platform,omitempty"`
+
+	// The name of the instance template.
+	// +kubebuilder:validation:Optional
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// Creates a unique name beginning with the specified
+	// prefix. Conflicts with name.
+	// +kubebuilder:validation:Optional
+	NamePrefix *string `json:"namePrefix,omitempty" tf:"name_prefix,omitempty"`
+
+	// Networks to attach to instances created from
+	// this template. This can be specified multiple times for multiple networks.
+	// Structure is documented below.
+	// +kubebuilder:validation:Optional
+	NetworkInterface []NetworkInterfaceParameters `json:"networkInterface,omitempty" tf:"network_interface,omitempty"`
+
+	// os-features, and network_interface.0.nic-type must be GVNIC
+	// in order for this setting to take effect.
+	// +kubebuilder:validation:Optional
+	NetworkPerformanceConfig []NetworkPerformanceConfigParameters `json:"networkPerformanceConfig,omitempty" tf:"network_performance_config,omitempty"`
+
+	// The ID of the project in which the resource belongs. If it
+	// is not provided, the provider project is used.
+	// +kubebuilder:validation:Optional
+	Project *string `json:"project,omitempty" tf:"project,omitempty"`
+
+	// An instance template is a global resource that is not
+	// bound to a zone or a region. However, you can still specify some regional
+	// resources in an instance template, which restricts the template to the
+	// region where that resource resides. For example, a custom subnetwork
+	// resource is tied to a specific region. Defaults to the region of the
+	// Provider if no value is given.
+	// +kubebuilder:validation:Optional
+	Region *string `json:"region,omitempty" tf:"region,omitempty"`
+
+	// Specifies the reservations that this instance can consume from.
+	// Structure is documented below.
+	// +kubebuilder:validation:Optional
+	ReservationAffinity []ReservationAffinityParameters `json:"reservationAffinity,omitempty" tf:"reservation_affinity,omitempty"`
+
+	// A set of key/value resource manager tag pairs to bind to the instances. Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/456.
+	// +kubebuilder:validation:Optional
+	ResourceManagerTags map[string]*string `json:"resourceManagerTags,omitempty" tf:"resource_manager_tags,omitempty"`
+
+	// - A list of self_links of resource policies to attach to the instance. Modifying this list will cause the instance to recreate. Currently a max of 1 resource policy is supported.
+	// +kubebuilder:validation:Optional
+	ResourcePolicies []*string `json:"resourcePolicies,omitempty" tf:"resource_policies,omitempty"`
+
+	// The scheduling strategy to use. More details about
+	// this configuration option are detailed below.
+	// +kubebuilder:validation:Optional
+	Scheduling []SchedulingParameters `json:"scheduling,omitempty" tf:"scheduling,omitempty"`
+
+	// Service account to attach to the instance. Structure is documented below.
+	// +kubebuilder:validation:Optional
+	ServiceAccount []ServiceAccountParameters `json:"serviceAccount,omitempty" tf:"service_account,omitempty"`
+
+	// Enable Shielded VM on this instance. Shielded VM provides verifiable integrity to prevent against malware and rootkits. Defaults to disabled. Structure is documented below.
+	// Note: shielded_instance_config can only be used with boot images with shielded vm support. See the complete list here.
+	// +kubebuilder:validation:Optional
+	ShieldedInstanceConfig []ShieldedInstanceConfigParameters `json:"shieldedInstanceConfig,omitempty" tf:"shielded_instance_config,omitempty"`
+
+	// Tags to attach to the instance.
+	// +kubebuilder:validation:Optional
+	Tags []*string `json:"tags,omitempty" tf:"tags,omitempty"`
 }
 
-type InstanceTemplateNetworkInterfaceInitParameters struct {
+type LocalSsdRecoveryTimeoutInitParameters struct {
+
+	// Span of time that's a fraction of a second at nanosecond
+	// resolution. Durations less than one second are represented with a 0
+	// seconds field and a positive nanos field. Must be from 0 to
+	// 999,999,999 inclusive.
+	Nanos *float64 `json:"nanos,omitempty" tf:"nanos,omitempty"`
+
+	// Span of time at a resolution of a second. Must be from 0 to
+	// 315,576,000,000 inclusive. Note: these bounds are computed from: 60
+	// sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years.
+	Seconds *float64 `json:"seconds,omitempty" tf:"seconds,omitempty"`
+}
+
+type LocalSsdRecoveryTimeoutObservation struct {
+
+	// Span of time that's a fraction of a second at nanosecond
+	// resolution. Durations less than one second are represented with a 0
+	// seconds field and a positive nanos field. Must be from 0 to
+	// 999,999,999 inclusive.
+	Nanos *float64 `json:"nanos,omitempty" tf:"nanos,omitempty"`
+
+	// Span of time at a resolution of a second. Must be from 0 to
+	// 315,576,000,000 inclusive. Note: these bounds are computed from: 60
+	// sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years.
+	Seconds *float64 `json:"seconds,omitempty" tf:"seconds,omitempty"`
+}
+
+type LocalSsdRecoveryTimeoutParameters struct {
+
+	// Span of time that's a fraction of a second at nanosecond
+	// resolution. Durations less than one second are represented with a 0
+	// seconds field and a positive nanos field. Must be from 0 to
+	// 999,999,999 inclusive.
+	// +kubebuilder:validation:Optional
+	Nanos *float64 `json:"nanos,omitempty" tf:"nanos,omitempty"`
+
+	// Span of time at a resolution of a second. Must be from 0 to
+	// 315,576,000,000 inclusive. Note: these bounds are computed from: 60
+	// sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years.
+	// +kubebuilder:validation:Optional
+	Seconds *float64 `json:"seconds,omitempty" tf:"seconds,omitempty"`
+}
+
+type MaxRunDurationInitParameters struct {
+
+	// Span of time that's a fraction of a second at nanosecond
+	// resolution. Durations less than one second are represented with a 0
+	// seconds field and a positive nanos field. Must be from 0 to
+	// 999,999,999 inclusive.
+	Nanos *float64 `json:"nanos,omitempty" tf:"nanos,omitempty"`
+
+	// Span of time at a resolution of a second. Must be from 0 to
+	// 315,576,000,000 inclusive. Note: these bounds are computed from: 60
+	// sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years.
+	Seconds *float64 `json:"seconds,omitempty" tf:"seconds,omitempty"`
+}
+
+type MaxRunDurationObservation struct {
+
+	// Span of time that's a fraction of a second at nanosecond
+	// resolution. Durations less than one second are represented with a 0
+	// seconds field and a positive nanos field. Must be from 0 to
+	// 999,999,999 inclusive.
+	Nanos *float64 `json:"nanos,omitempty" tf:"nanos,omitempty"`
+
+	// Span of time at a resolution of a second. Must be from 0 to
+	// 315,576,000,000 inclusive. Note: these bounds are computed from: 60
+	// sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years.
+	Seconds *float64 `json:"seconds,omitempty" tf:"seconds,omitempty"`
+}
+
+type MaxRunDurationParameters struct {
+
+	// Span of time that's a fraction of a second at nanosecond
+	// resolution. Durations less than one second are represented with a 0
+	// seconds field and a positive nanos field. Must be from 0 to
+	// 999,999,999 inclusive.
+	// +kubebuilder:validation:Optional
+	Nanos *float64 `json:"nanos,omitempty" tf:"nanos,omitempty"`
+
+	// Span of time at a resolution of a second. Must be from 0 to
+	// 315,576,000,000 inclusive. Note: these bounds are computed from: 60
+	// sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years.
+	// +kubebuilder:validation:Optional
+	Seconds *float64 `json:"seconds,omitempty" tf:"seconds,omitempty"`
+}
+
+type NetworkInterfaceInitParameters struct {
 
 	// Access configurations, i.e. IPs via which this
 	// instance can be accessed via the Internet.g. via tunnel or because it is running on another cloud instance
 	// on that network). This block can be repeated multiple times. Structure documented below.
-	AccessConfig []InstanceTemplateNetworkInterfaceAccessConfigInitParameters `json:"accessConfig,omitempty" tf:"access_config,omitempty"`
+	AccessConfig []AccessConfigInitParameters `json:"accessConfig,omitempty" tf:"access_config,omitempty"`
 
 	// An
 	// array of alias IP ranges for this network interface. Can only be specified for network
 	// interfaces on subnet-mode networks. Structure documented below.
-	AliasIPRange []InstanceTemplateNetworkInterfaceAliasIPRangeInitParameters `json:"aliasIpRange,omitempty" tf:"alias_ip_range,omitempty"`
+	AliasIPRange []AliasIPRangeInitParameters `json:"aliasIpRange,omitempty" tf:"alias_ip_range,omitempty"`
 
 	// An array of IPv6 access configurations for this interface.
 	// Currently, only one IPv6 access config, DIRECT_IPV6, is supported. If there is no ipv6AccessConfig
 	// specified, then this instance will have no external IPv6 Internet access. Structure documented below.
-	IPv6AccessConfig []InstanceTemplateNetworkInterfaceIPv6AccessConfigInitParameters `json:"ipv6AccessConfig,omitempty" tf:"ipv6_access_config,omitempty"`
+	IPv6AccessConfig []IPv6AccessConfigInitParameters `json:"ipv6AccessConfig,omitempty" tf:"ipv6_access_config,omitempty"`
+
+	IPv6Address *string `json:"ipv6Address,omitempty" tf:"ipv6_address,omitempty"`
+
+	InternalIPv6PrefixLength *float64 `json:"internalIpv6PrefixLength,omitempty" tf:"internal_ipv6_prefix_length,omitempty"`
+
+	// The URL of the network attachment that this interface should connect to in the following format: projects/{projectNumber}/regions/{region_name}/networkAttachments/{network_attachment_name}.
+	NetworkAttachment *string `json:"networkAttachment,omitempty" tf:"network_attachment,omitempty"`
 
 	// The private IP address to assign to the instance. If
 	// empty, the address will be automatically assigned.
@@ -716,24 +1041,28 @@ type InstanceTemplateNetworkInterfaceInitParameters struct {
 	SubnetworkProject *string `json:"subnetworkProject,omitempty" tf:"subnetwork_project,omitempty"`
 }
 
-type InstanceTemplateNetworkInterfaceObservation struct {
+type NetworkInterfaceObservation struct {
 
 	// Access configurations, i.e. IPs via which this
 	// instance can be accessed via the Internet.g. via tunnel or because it is running on another cloud instance
 	// on that network). This block can be repeated multiple times. Structure documented below.
-	AccessConfig []InstanceTemplateNetworkInterfaceAccessConfigObservation `json:"accessConfig,omitempty" tf:"access_config,omitempty"`
+	AccessConfig []AccessConfigObservation `json:"accessConfig,omitempty" tf:"access_config,omitempty"`
 
 	// An
 	// array of alias IP ranges for this network interface. Can only be specified for network
 	// interfaces on subnet-mode networks. Structure documented below.
-	AliasIPRange []InstanceTemplateNetworkInterfaceAliasIPRangeObservation `json:"aliasIpRange,omitempty" tf:"alias_ip_range,omitempty"`
+	AliasIPRange []AliasIPRangeObservation `json:"aliasIpRange,omitempty" tf:"alias_ip_range,omitempty"`
 
 	// An array of IPv6 access configurations for this interface.
 	// Currently, only one IPv6 access config, DIRECT_IPV6, is supported. If there is no ipv6AccessConfig
 	// specified, then this instance will have no external IPv6 Internet access. Structure documented below.
-	IPv6AccessConfig []InstanceTemplateNetworkInterfaceIPv6AccessConfigObservation `json:"ipv6AccessConfig,omitempty" tf:"ipv6_access_config,omitempty"`
+	IPv6AccessConfig []IPv6AccessConfigObservation `json:"ipv6AccessConfig,omitempty" tf:"ipv6_access_config,omitempty"`
 
 	IPv6AccessType *string `json:"ipv6AccessType,omitempty" tf:"ipv6_access_type,omitempty"`
+
+	IPv6Address *string `json:"ipv6Address,omitempty" tf:"ipv6_address,omitempty"`
+
+	InternalIPv6PrefixLength *float64 `json:"internalIpv6PrefixLength,omitempty" tf:"internal_ipv6_prefix_length,omitempty"`
 
 	// The name of the instance template.
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
@@ -742,6 +1071,9 @@ type InstanceTemplateNetworkInterfaceObservation struct {
 	// Use network attribute for Legacy or Auto subnetted networks and
 	// subnetwork for custom subnetted networks.
 	Network *string `json:"network,omitempty" tf:"network,omitempty"`
+
+	// The URL of the network attachment that this interface should connect to in the following format: projects/{projectNumber}/regions/{region_name}/networkAttachments/{network_attachment_name}.
+	NetworkAttachment *string `json:"networkAttachment,omitempty" tf:"network_attachment,omitempty"`
 
 	// The private IP address to assign to the instance. If
 	// empty, the address will be automatically assigned.
@@ -766,25 +1098,31 @@ type InstanceTemplateNetworkInterfaceObservation struct {
 	SubnetworkProject *string `json:"subnetworkProject,omitempty" tf:"subnetwork_project,omitempty"`
 }
 
-type InstanceTemplateNetworkInterfaceParameters struct {
+type NetworkInterfaceParameters struct {
 
 	// Access configurations, i.e. IPs via which this
 	// instance can be accessed via the Internet.g. via tunnel or because it is running on another cloud instance
 	// on that network). This block can be repeated multiple times. Structure documented below.
 	// +kubebuilder:validation:Optional
-	AccessConfig []InstanceTemplateNetworkInterfaceAccessConfigParameters `json:"accessConfig,omitempty" tf:"access_config,omitempty"`
+	AccessConfig []AccessConfigParameters `json:"accessConfig,omitempty" tf:"access_config,omitempty"`
 
 	// An
 	// array of alias IP ranges for this network interface. Can only be specified for network
 	// interfaces on subnet-mode networks. Structure documented below.
 	// +kubebuilder:validation:Optional
-	AliasIPRange []InstanceTemplateNetworkInterfaceAliasIPRangeParameters `json:"aliasIpRange,omitempty" tf:"alias_ip_range,omitempty"`
+	AliasIPRange []AliasIPRangeParameters `json:"aliasIpRange,omitempty" tf:"alias_ip_range,omitempty"`
 
 	// An array of IPv6 access configurations for this interface.
 	// Currently, only one IPv6 access config, DIRECT_IPV6, is supported. If there is no ipv6AccessConfig
 	// specified, then this instance will have no external IPv6 Internet access. Structure documented below.
 	// +kubebuilder:validation:Optional
-	IPv6AccessConfig []InstanceTemplateNetworkInterfaceIPv6AccessConfigParameters `json:"ipv6AccessConfig,omitempty" tf:"ipv6_access_config,omitempty"`
+	IPv6AccessConfig []IPv6AccessConfigParameters `json:"ipv6AccessConfig,omitempty" tf:"ipv6_access_config,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	IPv6Address *string `json:"ipv6Address,omitempty" tf:"ipv6_address,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	InternalIPv6PrefixLength *float64 `json:"internalIpv6PrefixLength,omitempty" tf:"internal_ipv6_prefix_length,omitempty"`
 
 	// The name or self_link of the network to attach this interface to.
 	// Use network attribute for Legacy or Auto subnetted networks and
@@ -792,6 +1130,10 @@ type InstanceTemplateNetworkInterfaceParameters struct {
 	// +crossplane:generate:reference:type=Network
 	// +kubebuilder:validation:Optional
 	Network *string `json:"network,omitempty" tf:"network,omitempty"`
+
+	// The URL of the network attachment that this interface should connect to in the following format: projects/{projectNumber}/regions/{region_name}/networkAttachments/{network_attachment_name}.
+	// +kubebuilder:validation:Optional
+	NetworkAttachment *string `json:"networkAttachment,omitempty" tf:"network_attachment,omitempty"`
 
 	// The private IP address to assign to the instance. If
 	// empty, the address will be automatically assigned.
@@ -839,330 +1181,26 @@ type InstanceTemplateNetworkInterfaceParameters struct {
 	SubnetworkSelector *v1.Selector `json:"subnetworkSelector,omitempty" tf:"-"`
 }
 
-type InstanceTemplateObservation struct {
+type NetworkPerformanceConfigInitParameters struct {
 
-	// Configure Nested Virtualisation and Simultaneous Hyper Threading on this VM. Structure is documented below
-	AdvancedMachineFeatures []InstanceTemplateAdvancedMachineFeaturesObservation `json:"advancedMachineFeatures,omitempty" tf:"advanced_machine_features,omitempty"`
-
-	// Whether to allow sending and receiving of
-	// packets with non-matching source or destination IPs. This defaults to false.
-	CanIPForward *bool `json:"canIpForward,omitempty" tf:"can_ip_forward,omitempty"`
-
-	// Enable Confidential Mode on this VM. Structure is documented below
-	ConfidentialInstanceConfig []InstanceTemplateConfidentialInstanceConfigObservation `json:"confidentialInstanceConfig,omitempty" tf:"confidential_instance_config,omitempty"`
-
-	// A brief description of this resource.
-	Description *string `json:"description,omitempty" tf:"description,omitempty"`
-
-	// Disks to attach to instances created from this template.
-	// This can be specified multiple times for multiple disks. Structure is
-	// documented below.
-	Disk []InstanceTemplateDiskObservation `json:"disk,omitempty" tf:"disk,omitempty"`
-
-	// List of the type and count of accelerator cards attached to the instance. Structure documented below.
-	GuestAccelerator []InstanceTemplateGuestAcceleratorObservation `json:"guestAccelerator,omitempty" tf:"guest_accelerator,omitempty"`
-
-	// an identifier for the resource with format projects/{{project}}/global/instanceTemplates/{{name}}
-	ID *string `json:"id,omitempty" tf:"id,omitempty"`
-
-	// A brief description to use for instances
-	// created from this template.
-	InstanceDescription *string `json:"instanceDescription,omitempty" tf:"instance_description,omitempty"`
-
-	// A set of key/value label pairs to assign to instances
-	// created from this template.
-	Labels map[string]*string `json:"labels,omitempty" tf:"labels,omitempty"`
-
-	// The machine type to create.
-	MachineType *string `json:"machineType,omitempty" tf:"machine_type,omitempty"`
-
-	// Metadata key/value pairs to make available from
-	// within instances created from this template.
-	Metadata map[string]string `json:"metadata,omitempty" tf:"metadata,omitempty"`
-
-	// The unique fingerprint of the metadata.
-	MetadataFingerprint *string `json:"metadataFingerprint,omitempty" tf:"metadata_fingerprint,omitempty"`
-
-	// An alternative to using the
-	// startup-script metadata key, mostly to match the compute_instance resource.
-	// This replaces the startup-script metadata key on the created instance and
-	// thus the two mechanisms are not allowed to be used simultaneously.
-	MetadataStartupScript *string `json:"metadataStartupScript,omitempty" tf:"metadata_startup_script,omitempty"`
-
-	// Specifies a minimum CPU platform. Applicable values are the friendly names of CPU platforms, such as
-	// Intel Haswell or Intel Skylake. See the complete list here.
-	MinCPUPlatform *string `json:"minCpuPlatform,omitempty" tf:"min_cpu_platform,omitempty"`
-
-	// The name of the instance template.
-	Name *string `json:"name,omitempty" tf:"name,omitempty"`
-
-	// Creates a unique name beginning with the specified
-	// prefix. Conflicts with name.
-	NamePrefix *string `json:"namePrefix,omitempty" tf:"name_prefix,omitempty"`
-
-	// Networks to attach to instances created from
-	// this template. This can be specified multiple times for multiple networks.
-	// Structure is documented below.
-	NetworkInterface []InstanceTemplateNetworkInterfaceObservation `json:"networkInterface,omitempty" tf:"network_interface,omitempty"`
-
-	// The ID of the project in which the resource belongs. If it
-	// is not provided, the provider project is used.
-	Project *string `json:"project,omitempty" tf:"project,omitempty"`
-
-	// An instance template is a global resource that is not
-	// bound to a zone or a region. However, you can still specify some regional
-	// resources in an instance template, which restricts the template to the
-	// region where that resource resides. For example, a custom subnetwork
-	// resource is tied to a specific region. Defaults to the region of the
-	// Provider if no value is given.
-	Region *string `json:"region,omitempty" tf:"region,omitempty"`
-
-	// Specifies the reservations that this instance can consume from.
-	// Structure is documented below.
-	ReservationAffinity []InstanceTemplateReservationAffinityObservation `json:"reservationAffinity,omitempty" tf:"reservation_affinity,omitempty"`
-
-	// - A list of self_links of resource policies to attach to the instance. Modifying this list will cause the instance to recreate. Currently a max of 1 resource policy is supported.
-	ResourcePolicies []*string `json:"resourcePolicies,omitempty" tf:"resource_policies,omitempty"`
-
-	// The scheduling strategy to use. More details about
-	// this configuration option are detailed below.
-	Scheduling []InstanceTemplateSchedulingObservation `json:"scheduling,omitempty" tf:"scheduling,omitempty"`
-
-	// The URI of the created resource.
-	SelfLink *string `json:"selfLink,omitempty" tf:"self_link,omitempty"`
-
-	// A special URI of the created resource that uniquely identifies this instance template with the following format: projects/{{project}}/global/instanceTemplates/{{name}}?uniqueId={{uniqueId}}
-	// Referencing an instance template via this attribute prevents Time of Check to Time of Use attacks when the instance template resides in a shared/untrusted environment.
-	SelfLinkUnique *string `json:"selfLinkUnique,omitempty" tf:"self_link_unique,omitempty"`
-
-	// Service account to attach to the instance. Structure is documented below.
-	ServiceAccount []InstanceTemplateServiceAccountObservation `json:"serviceAccount,omitempty" tf:"service_account,omitempty"`
-
-	// Enable Shielded VM on this instance. Shielded VM provides verifiable integrity to prevent against malware and rootkits. Defaults to disabled. Structure is documented below.
-	// Note: shielded_instance_config can only be used with boot images with shielded vm support. See the complete list here.
-	ShieldedInstanceConfig []InstanceTemplateShieldedInstanceConfigObservation `json:"shieldedInstanceConfig,omitempty" tf:"shielded_instance_config,omitempty"`
-
-	// Tags to attach to the instance.
-	Tags []*string `json:"tags,omitempty" tf:"tags,omitempty"`
-
-	// The unique fingerprint of the tags.
-	TagsFingerprint *string `json:"tagsFingerprint,omitempty" tf:"tags_fingerprint,omitempty"`
+	// The egress bandwidth tier to enable. Possible values: TIER_1, DEFAULT
+	TotalEgressBandwidthTier *string `json:"totalEgressBandwidthTier,omitempty" tf:"total_egress_bandwidth_tier,omitempty"`
 }
 
-type InstanceTemplateParameters struct {
+type NetworkPerformanceConfigObservation struct {
 
-	// Configure Nested Virtualisation and Simultaneous Hyper Threading on this VM. Structure is documented below
-	// +kubebuilder:validation:Optional
-	AdvancedMachineFeatures []InstanceTemplateAdvancedMachineFeaturesParameters `json:"advancedMachineFeatures,omitempty" tf:"advanced_machine_features,omitempty"`
-
-	// Whether to allow sending and receiving of
-	// packets with non-matching source or destination IPs. This defaults to false.
-	// +kubebuilder:validation:Optional
-	CanIPForward *bool `json:"canIpForward,omitempty" tf:"can_ip_forward,omitempty"`
-
-	// Enable Confidential Mode on this VM. Structure is documented below
-	// +kubebuilder:validation:Optional
-	ConfidentialInstanceConfig []InstanceTemplateConfidentialInstanceConfigParameters `json:"confidentialInstanceConfig,omitempty" tf:"confidential_instance_config,omitempty"`
-
-	// A brief description of this resource.
-	// +kubebuilder:validation:Optional
-	Description *string `json:"description,omitempty" tf:"description,omitempty"`
-
-	// Disks to attach to instances created from this template.
-	// This can be specified multiple times for multiple disks. Structure is
-	// documented below.
-	// +kubebuilder:validation:Optional
-	Disk []InstanceTemplateDiskParameters `json:"disk,omitempty" tf:"disk,omitempty"`
-
-	// List of the type and count of accelerator cards attached to the instance. Structure documented below.
-	// +kubebuilder:validation:Optional
-	GuestAccelerator []InstanceTemplateGuestAcceleratorParameters `json:"guestAccelerator,omitempty" tf:"guest_accelerator,omitempty"`
-
-	// A brief description to use for instances
-	// created from this template.
-	// +kubebuilder:validation:Optional
-	InstanceDescription *string `json:"instanceDescription,omitempty" tf:"instance_description,omitempty"`
-
-	// A set of key/value label pairs to assign to instances
-	// created from this template.
-	// +kubebuilder:validation:Optional
-	Labels map[string]*string `json:"labels,omitempty" tf:"labels,omitempty"`
-
-	// The machine type to create.
-	// +kubebuilder:validation:Optional
-	MachineType *string `json:"machineType,omitempty" tf:"machine_type,omitempty"`
-
-	// Metadata key/value pairs to make available from
-	// within instances created from this template.
-	// +kubebuilder:validation:Optional
-	Metadata map[string]string `json:"metadata,omitempty" tf:"metadata,omitempty"`
-
-	// An alternative to using the
-	// startup-script metadata key, mostly to match the compute_instance resource.
-	// This replaces the startup-script metadata key on the created instance and
-	// thus the two mechanisms are not allowed to be used simultaneously.
-	// +kubebuilder:validation:Optional
-	MetadataStartupScript *string `json:"metadataStartupScript,omitempty" tf:"metadata_startup_script,omitempty"`
-
-	// Specifies a minimum CPU platform. Applicable values are the friendly names of CPU platforms, such as
-	// Intel Haswell or Intel Skylake. See the complete list here.
-	// +kubebuilder:validation:Optional
-	MinCPUPlatform *string `json:"minCpuPlatform,omitempty" tf:"min_cpu_platform,omitempty"`
-
-	// The name of the instance template.
-	// +kubebuilder:validation:Optional
-	Name *string `json:"name,omitempty" tf:"name,omitempty"`
-
-	// Creates a unique name beginning with the specified
-	// prefix. Conflicts with name.
-	// +kubebuilder:validation:Optional
-	NamePrefix *string `json:"namePrefix,omitempty" tf:"name_prefix,omitempty"`
-
-	// Networks to attach to instances created from
-	// this template. This can be specified multiple times for multiple networks.
-	// Structure is documented below.
-	// +kubebuilder:validation:Optional
-	NetworkInterface []InstanceTemplateNetworkInterfaceParameters `json:"networkInterface,omitempty" tf:"network_interface,omitempty"`
-
-	// The ID of the project in which the resource belongs. If it
-	// is not provided, the provider project is used.
-	// +kubebuilder:validation:Optional
-	Project *string `json:"project,omitempty" tf:"project,omitempty"`
-
-	// An instance template is a global resource that is not
-	// bound to a zone or a region. However, you can still specify some regional
-	// resources in an instance template, which restricts the template to the
-	// region where that resource resides. For example, a custom subnetwork
-	// resource is tied to a specific region. Defaults to the region of the
-	// Provider if no value is given.
-	// +kubebuilder:validation:Optional
-	Region *string `json:"region,omitempty" tf:"region,omitempty"`
-
-	// Specifies the reservations that this instance can consume from.
-	// Structure is documented below.
-	// +kubebuilder:validation:Optional
-	ReservationAffinity []InstanceTemplateReservationAffinityParameters `json:"reservationAffinity,omitempty" tf:"reservation_affinity,omitempty"`
-
-	// - A list of self_links of resource policies to attach to the instance. Modifying this list will cause the instance to recreate. Currently a max of 1 resource policy is supported.
-	// +kubebuilder:validation:Optional
-	ResourcePolicies []*string `json:"resourcePolicies,omitempty" tf:"resource_policies,omitempty"`
-
-	// The scheduling strategy to use. More details about
-	// this configuration option are detailed below.
-	// +kubebuilder:validation:Optional
-	Scheduling []InstanceTemplateSchedulingParameters `json:"scheduling,omitempty" tf:"scheduling,omitempty"`
-
-	// Service account to attach to the instance. Structure is documented below.
-	// +kubebuilder:validation:Optional
-	ServiceAccount []InstanceTemplateServiceAccountParameters `json:"serviceAccount,omitempty" tf:"service_account,omitempty"`
-
-	// Enable Shielded VM on this instance. Shielded VM provides verifiable integrity to prevent against malware and rootkits. Defaults to disabled. Structure is documented below.
-	// Note: shielded_instance_config can only be used with boot images with shielded vm support. See the complete list here.
-	// +kubebuilder:validation:Optional
-	ShieldedInstanceConfig []InstanceTemplateShieldedInstanceConfigParameters `json:"shieldedInstanceConfig,omitempty" tf:"shielded_instance_config,omitempty"`
-
-	// Tags to attach to the instance.
-	// +kubebuilder:validation:Optional
-	Tags []*string `json:"tags,omitempty" tf:"tags,omitempty"`
+	// The egress bandwidth tier to enable. Possible values: TIER_1, DEFAULT
+	TotalEgressBandwidthTier *string `json:"totalEgressBandwidthTier,omitempty" tf:"total_egress_bandwidth_tier,omitempty"`
 }
 
-type InstanceTemplateReservationAffinityInitParameters struct {
+type NetworkPerformanceConfigParameters struct {
 
-	// Specifies the label selector for the reservation to use..
-	// Structure is documented below.
-	SpecificReservation []InstanceTemplateReservationAffinitySpecificReservationInitParameters `json:"specificReservation,omitempty" tf:"specific_reservation,omitempty"`
-
-	// The type of reservation from which this instance can consume resources.
-	Type *string `json:"type,omitempty" tf:"type,omitempty"`
-}
-
-type InstanceTemplateReservationAffinityObservation struct {
-
-	// Specifies the label selector for the reservation to use..
-	// Structure is documented below.
-	SpecificReservation []InstanceTemplateReservationAffinitySpecificReservationObservation `json:"specificReservation,omitempty" tf:"specific_reservation,omitempty"`
-
-	// The type of reservation from which this instance can consume resources.
-	Type *string `json:"type,omitempty" tf:"type,omitempty"`
-}
-
-type InstanceTemplateReservationAffinityParameters struct {
-
-	// Specifies the label selector for the reservation to use..
-	// Structure is documented below.
+	// The egress bandwidth tier to enable. Possible values: TIER_1, DEFAULT
 	// +kubebuilder:validation:Optional
-	SpecificReservation []InstanceTemplateReservationAffinitySpecificReservationParameters `json:"specificReservation,omitempty" tf:"specific_reservation,omitempty"`
-
-	// The type of reservation from which this instance can consume resources.
-	// +kubebuilder:validation:Optional
-	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+	TotalEgressBandwidthTier *string `json:"totalEgressBandwidthTier,omitempty" tf:"total_egress_bandwidth_tier,omitempty"`
 }
 
-type InstanceTemplateReservationAffinitySpecificReservationInitParameters struct {
-
-	// Corresponds to the label key of a reservation resource. To target a SPECIFIC_RESERVATION by name, specify compute.googleapis.com/reservation-name as the key and specify the name of your reservation as the only value.
-	Key *string `json:"key,omitempty" tf:"key,omitempty"`
-
-	// Corresponds to the label values of a reservation resource.
-	Values []*string `json:"values,omitempty" tf:"values,omitempty"`
-}
-
-type InstanceTemplateReservationAffinitySpecificReservationObservation struct {
-
-	// Corresponds to the label key of a reservation resource. To target a SPECIFIC_RESERVATION by name, specify compute.googleapis.com/reservation-name as the key and specify the name of your reservation as the only value.
-	Key *string `json:"key,omitempty" tf:"key,omitempty"`
-
-	// Corresponds to the label values of a reservation resource.
-	Values []*string `json:"values,omitempty" tf:"values,omitempty"`
-}
-
-type InstanceTemplateReservationAffinitySpecificReservationParameters struct {
-
-	// Corresponds to the label key of a reservation resource. To target a SPECIFIC_RESERVATION by name, specify compute.googleapis.com/reservation-name as the key and specify the name of your reservation as the only value.
-	// +kubebuilder:validation:Optional
-	Key *string `json:"key,omitempty" tf:"key,omitempty"`
-
-	// Corresponds to the label values of a reservation resource.
-	// +kubebuilder:validation:Optional
-	Values []*string `json:"values,omitempty" tf:"values,omitempty"`
-}
-
-type InstanceTemplateSchedulingInitParameters struct {
-
-	// Specifies whether the instance should be
-	// automatically restarted if it is terminated by Compute Engine (not
-	// terminated by a user). This defaults to true.
-	AutomaticRestart *bool `json:"automaticRestart,omitempty" tf:"automatic_restart,omitempty"`
-
-	// Describe the type of termination action for SPOT VM. Can be STOP or DELETE.  Read more on here
-	InstanceTerminationAction *string `json:"instanceTerminationAction,omitempty" tf:"instance_termination_action,omitempty"`
-
-	MinNodeCpus *float64 `json:"minNodeCpus,omitempty" tf:"min_node_cpus,omitempty"`
-
-	// Specifies node affinities or anti-affinities
-	// to determine which sole-tenant nodes your instances and managed instance
-	// groups will use as host systems. Read more on sole-tenant node creation
-	// here.
-	// Structure documented below.
-	NodeAffinities []InstanceTemplateSchedulingNodeAffinitiesInitParameters `json:"nodeAffinities,omitempty" tf:"node_affinities,omitempty"`
-
-	// Defines the maintenance behavior for this
-	// instance.
-	OnHostMaintenance *string `json:"onHostMaintenance,omitempty" tf:"on_host_maintenance,omitempty"`
-
-	// Allows instance to be preempted. This defaults to
-	// false. Read more on this
-	// here.
-	Preemptible *bool `json:"preemptible,omitempty" tf:"preemptible,omitempty"`
-
-	// Describe the type of preemptible VM. This field accepts the value STANDARD or SPOT. If the value is STANDARD, there will be no discount. If this   is set to SPOT,
-	// preemptible should be true and auto_restart should be
-	// false. For more info about
-	// SPOT, read here
-	ProvisioningModel *string `json:"provisioningModel,omitempty" tf:"provisioning_model,omitempty"`
-}
-
-type InstanceTemplateSchedulingNodeAffinitiesInitParameters struct {
+type NodeAffinitiesInitParameters struct {
 
 	// Corresponds to the label key of a reservation resource. To target a SPECIFIC_RESERVATION by name, specify compute.googleapis.com/reservation-name as the key and specify the name of your reservation as the only value.
 	Key *string `json:"key,omitempty" tf:"key,omitempty"`
@@ -1175,7 +1213,7 @@ type InstanceTemplateSchedulingNodeAffinitiesInitParameters struct {
 	Values []*string `json:"values,omitempty" tf:"values,omitempty"`
 }
 
-type InstanceTemplateSchedulingNodeAffinitiesObservation struct {
+type NodeAffinitiesObservation struct {
 
 	// Corresponds to the label key of a reservation resource. To target a SPECIFIC_RESERVATION by name, specify compute.googleapis.com/reservation-name as the key and specify the name of your reservation as the only value.
 	Key *string `json:"key,omitempty" tf:"key,omitempty"`
@@ -1188,7 +1226,7 @@ type InstanceTemplateSchedulingNodeAffinitiesObservation struct {
 	Values []*string `json:"values,omitempty" tf:"values,omitempty"`
 }
 
-type InstanceTemplateSchedulingNodeAffinitiesParameters struct {
+type NodeAffinitiesParameters struct {
 
 	// Corresponds to the label key of a reservation resource. To target a SPECIFIC_RESERVATION by name, specify compute.googleapis.com/reservation-name as the key and specify the name of your reservation as the only value.
 	// +kubebuilder:validation:Optional
@@ -1204,7 +1242,39 @@ type InstanceTemplateSchedulingNodeAffinitiesParameters struct {
 	Values []*string `json:"values,omitempty" tf:"values,omitempty"`
 }
 
-type InstanceTemplateSchedulingObservation struct {
+type ReservationAffinityInitParameters struct {
+
+	// Specifies the label selector for the reservation to use..
+	// Structure is documented below.
+	SpecificReservation []SpecificReservationInitParameters `json:"specificReservation,omitempty" tf:"specific_reservation,omitempty"`
+
+	// The type of reservation from which this instance can consume resources.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+}
+
+type ReservationAffinityObservation struct {
+
+	// Specifies the label selector for the reservation to use..
+	// Structure is documented below.
+	SpecificReservation []SpecificReservationObservation `json:"specificReservation,omitempty" tf:"specific_reservation,omitempty"`
+
+	// The type of reservation from which this instance can consume resources.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+}
+
+type ReservationAffinityParameters struct {
+
+	// Specifies the label selector for the reservation to use..
+	// Structure is documented below.
+	// +kubebuilder:validation:Optional
+	SpecificReservation []SpecificReservationParameters `json:"specificReservation,omitempty" tf:"specific_reservation,omitempty"`
+
+	// The type of reservation from which this instance can consume resources.
+	// +kubebuilder:validation:Optional
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+}
+
+type SchedulingInitParameters struct {
 
 	// Specifies whether the instance should be
 	// automatically restarted if it is terminated by Compute Engine (not
@@ -1214,6 +1284,17 @@ type InstanceTemplateSchedulingObservation struct {
 	// Describe the type of termination action for SPOT VM. Can be STOP or DELETE.  Read more on here
 	InstanceTerminationAction *string `json:"instanceTerminationAction,omitempty" tf:"instance_termination_action,omitempty"`
 
+	// io/docs/providers/google/guides/provider_versions.html) Specifies the maximum amount of time a Local Ssd Vm should wait while recovery of the Local Ssd state is attempted. Its value should be in between 0 and 168 hours with hour granularity and the default value being 1 hour. Structure is documented below.
+	// The local_ssd_recovery_timeout block supports:
+	LocalSsdRecoveryTimeout []LocalSsdRecoveryTimeoutInitParameters `json:"localSsdRecoveryTimeout,omitempty" tf:"local_ssd_recovery_timeout,omitempty"`
+
+	// Beta Specifies the frequency of planned maintenance events. The accepted values are: PERIODIC.
+	MaintenanceInterval *string `json:"maintenanceInterval,omitempty" tf:"maintenance_interval,omitempty"`
+
+	// Beta The duration of the instance. Instance will run and be terminated after then, the termination action could be defined in instance_termination_action. Only support DELETE instance_termination_action at this point. Structure is documented below.
+	// The max_run_duration block supports:
+	MaxRunDuration []MaxRunDurationInitParameters `json:"maxRunDuration,omitempty" tf:"max_run_duration,omitempty"`
+
 	MinNodeCpus *float64 `json:"minNodeCpus,omitempty" tf:"min_node_cpus,omitempty"`
 
 	// Specifies node affinities or anti-affinities
@@ -1221,7 +1302,7 @@ type InstanceTemplateSchedulingObservation struct {
 	// groups will use as host systems. Read more on sole-tenant node creation
 	// here.
 	// Structure documented below.
-	NodeAffinities []InstanceTemplateSchedulingNodeAffinitiesObservation `json:"nodeAffinities,omitempty" tf:"node_affinities,omitempty"`
+	NodeAffinities []NodeAffinitiesInitParameters `json:"nodeAffinities,omitempty" tf:"node_affinities,omitempty"`
 
 	// Defines the maintenance behavior for this
 	// instance.
@@ -1233,13 +1314,59 @@ type InstanceTemplateSchedulingObservation struct {
 	Preemptible *bool `json:"preemptible,omitempty" tf:"preemptible,omitempty"`
 
 	// Describe the type of preemptible VM. This field accepts the value STANDARD or SPOT. If the value is STANDARD, there will be no discount. If this   is set to SPOT,
-	// preemptible should be true and auto_restart should be
+	// preemptible should be true and automatic_restart should be
 	// false. For more info about
 	// SPOT, read here
 	ProvisioningModel *string `json:"provisioningModel,omitempty" tf:"provisioning_model,omitempty"`
 }
 
-type InstanceTemplateSchedulingParameters struct {
+type SchedulingObservation struct {
+
+	// Specifies whether the instance should be
+	// automatically restarted if it is terminated by Compute Engine (not
+	// terminated by a user). This defaults to true.
+	AutomaticRestart *bool `json:"automaticRestart,omitempty" tf:"automatic_restart,omitempty"`
+
+	// Describe the type of termination action for SPOT VM. Can be STOP or DELETE.  Read more on here
+	InstanceTerminationAction *string `json:"instanceTerminationAction,omitempty" tf:"instance_termination_action,omitempty"`
+
+	// io/docs/providers/google/guides/provider_versions.html) Specifies the maximum amount of time a Local Ssd Vm should wait while recovery of the Local Ssd state is attempted. Its value should be in between 0 and 168 hours with hour granularity and the default value being 1 hour. Structure is documented below.
+	// The local_ssd_recovery_timeout block supports:
+	LocalSsdRecoveryTimeout []LocalSsdRecoveryTimeoutObservation `json:"localSsdRecoveryTimeout,omitempty" tf:"local_ssd_recovery_timeout,omitempty"`
+
+	// Beta Specifies the frequency of planned maintenance events. The accepted values are: PERIODIC.
+	MaintenanceInterval *string `json:"maintenanceInterval,omitempty" tf:"maintenance_interval,omitempty"`
+
+	// Beta The duration of the instance. Instance will run and be terminated after then, the termination action could be defined in instance_termination_action. Only support DELETE instance_termination_action at this point. Structure is documented below.
+	// The max_run_duration block supports:
+	MaxRunDuration []MaxRunDurationObservation `json:"maxRunDuration,omitempty" tf:"max_run_duration,omitempty"`
+
+	MinNodeCpus *float64 `json:"minNodeCpus,omitempty" tf:"min_node_cpus,omitempty"`
+
+	// Specifies node affinities or anti-affinities
+	// to determine which sole-tenant nodes your instances and managed instance
+	// groups will use as host systems. Read more on sole-tenant node creation
+	// here.
+	// Structure documented below.
+	NodeAffinities []NodeAffinitiesObservation `json:"nodeAffinities,omitempty" tf:"node_affinities,omitempty"`
+
+	// Defines the maintenance behavior for this
+	// instance.
+	OnHostMaintenance *string `json:"onHostMaintenance,omitempty" tf:"on_host_maintenance,omitempty"`
+
+	// Allows instance to be preempted. This defaults to
+	// false. Read more on this
+	// here.
+	Preemptible *bool `json:"preemptible,omitempty" tf:"preemptible,omitempty"`
+
+	// Describe the type of preemptible VM. This field accepts the value STANDARD or SPOT. If the value is STANDARD, there will be no discount. If this   is set to SPOT,
+	// preemptible should be true and automatic_restart should be
+	// false. For more info about
+	// SPOT, read here
+	ProvisioningModel *string `json:"provisioningModel,omitempty" tf:"provisioning_model,omitempty"`
+}
+
+type SchedulingParameters struct {
 
 	// Specifies whether the instance should be
 	// automatically restarted if it is terminated by Compute Engine (not
@@ -1251,6 +1378,20 @@ type InstanceTemplateSchedulingParameters struct {
 	// +kubebuilder:validation:Optional
 	InstanceTerminationAction *string `json:"instanceTerminationAction,omitempty" tf:"instance_termination_action,omitempty"`
 
+	// io/docs/providers/google/guides/provider_versions.html) Specifies the maximum amount of time a Local Ssd Vm should wait while recovery of the Local Ssd state is attempted. Its value should be in between 0 and 168 hours with hour granularity and the default value being 1 hour. Structure is documented below.
+	// The local_ssd_recovery_timeout block supports:
+	// +kubebuilder:validation:Optional
+	LocalSsdRecoveryTimeout []LocalSsdRecoveryTimeoutParameters `json:"localSsdRecoveryTimeout,omitempty" tf:"local_ssd_recovery_timeout,omitempty"`
+
+	// Beta Specifies the frequency of planned maintenance events. The accepted values are: PERIODIC.
+	// +kubebuilder:validation:Optional
+	MaintenanceInterval *string `json:"maintenanceInterval,omitempty" tf:"maintenance_interval,omitempty"`
+
+	// Beta The duration of the instance. Instance will run and be terminated after then, the termination action could be defined in instance_termination_action. Only support DELETE instance_termination_action at this point. Structure is documented below.
+	// The max_run_duration block supports:
+	// +kubebuilder:validation:Optional
+	MaxRunDuration []MaxRunDurationParameters `json:"maxRunDuration,omitempty" tf:"max_run_duration,omitempty"`
+
 	// +kubebuilder:validation:Optional
 	MinNodeCpus *float64 `json:"minNodeCpus,omitempty" tf:"min_node_cpus,omitempty"`
 
@@ -1260,7 +1401,7 @@ type InstanceTemplateSchedulingParameters struct {
 	// here.
 	// Structure documented below.
 	// +kubebuilder:validation:Optional
-	NodeAffinities []InstanceTemplateSchedulingNodeAffinitiesParameters `json:"nodeAffinities,omitempty" tf:"node_affinities,omitempty"`
+	NodeAffinities []NodeAffinitiesParameters `json:"nodeAffinities,omitempty" tf:"node_affinities,omitempty"`
 
 	// Defines the maintenance behavior for this
 	// instance.
@@ -1274,14 +1415,14 @@ type InstanceTemplateSchedulingParameters struct {
 	Preemptible *bool `json:"preemptible,omitempty" tf:"preemptible,omitempty"`
 
 	// Describe the type of preemptible VM. This field accepts the value STANDARD or SPOT. If the value is STANDARD, there will be no discount. If this   is set to SPOT,
-	// preemptible should be true and auto_restart should be
+	// preemptible should be true and automatic_restart should be
 	// false. For more info about
 	// SPOT, read here
 	// +kubebuilder:validation:Optional
 	ProvisioningModel *string `json:"provisioningModel,omitempty" tf:"provisioning_model,omitempty"`
 }
 
-type InstanceTemplateServiceAccountInitParameters struct {
+type ServiceAccountInitParameters struct {
 
 	// A list of service scopes. Both OAuth2 URLs and gcloud
 	// short names are supported. To allow full access to all Cloud APIs, use the
@@ -1289,7 +1430,7 @@ type InstanceTemplateServiceAccountInitParameters struct {
 	Scopes []*string `json:"scopes,omitempty" tf:"scopes,omitempty"`
 }
 
-type InstanceTemplateServiceAccountObservation struct {
+type ServiceAccountObservation struct {
 
 	// The service account e-mail address. If not given, the
 	// default Google Compute Engine service account is used.
@@ -1301,7 +1442,7 @@ type InstanceTemplateServiceAccountObservation struct {
 	Scopes []*string `json:"scopes,omitempty" tf:"scopes,omitempty"`
 }
 
-type InstanceTemplateServiceAccountParameters struct {
+type ServiceAccountParameters struct {
 
 	// The service account e-mail address. If not given, the
 	// default Google Compute Engine service account is used.
@@ -1325,7 +1466,7 @@ type InstanceTemplateServiceAccountParameters struct {
 	Scopes []*string `json:"scopes,omitempty" tf:"scopes,omitempty"`
 }
 
-type InstanceTemplateShieldedInstanceConfigInitParameters struct {
+type ShieldedInstanceConfigInitParameters struct {
 
 	// - Compare the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. Defaults to true.
 	EnableIntegrityMonitoring *bool `json:"enableIntegrityMonitoring,omitempty" tf:"enable_integrity_monitoring,omitempty"`
@@ -1337,7 +1478,7 @@ type InstanceTemplateShieldedInstanceConfigInitParameters struct {
 	EnableVtpm *bool `json:"enableVtpm,omitempty" tf:"enable_vtpm,omitempty"`
 }
 
-type InstanceTemplateShieldedInstanceConfigObservation struct {
+type ShieldedInstanceConfigObservation struct {
 
 	// - Compare the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. Defaults to true.
 	EnableIntegrityMonitoring *bool `json:"enableIntegrityMonitoring,omitempty" tf:"enable_integrity_monitoring,omitempty"`
@@ -1349,7 +1490,7 @@ type InstanceTemplateShieldedInstanceConfigObservation struct {
 	EnableVtpm *bool `json:"enableVtpm,omitempty" tf:"enable_vtpm,omitempty"`
 }
 
-type InstanceTemplateShieldedInstanceConfigParameters struct {
+type ShieldedInstanceConfigParameters struct {
 
 	// - Compare the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. Defaults to true.
 	// +kubebuilder:validation:Optional
@@ -1362,6 +1503,111 @@ type InstanceTemplateShieldedInstanceConfigParameters struct {
 	// - Use a virtualized trusted platform module, which is a specialized computer chip you can use to encrypt objects like keys and certificates. Defaults to true.
 	// +kubebuilder:validation:Optional
 	EnableVtpm *bool `json:"enableVtpm,omitempty" tf:"enable_vtpm,omitempty"`
+}
+
+type SourceImageEncryptionKeyInitParameters struct {
+
+	// The self link of the encryption key that is
+	// stored in Google Cloud KMS.
+	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
+
+	// The service account being used for the
+	// encryption request for the given KMS key. If absent, the Compute Engine
+	// default service account is used.
+	KMSKeyServiceAccount *string `json:"kmsKeyServiceAccount,omitempty" tf:"kms_key_service_account,omitempty"`
+}
+
+type SourceImageEncryptionKeyObservation struct {
+
+	// The self link of the encryption key that is
+	// stored in Google Cloud KMS.
+	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
+
+	// The service account being used for the
+	// encryption request for the given KMS key. If absent, the Compute Engine
+	// default service account is used.
+	KMSKeyServiceAccount *string `json:"kmsKeyServiceAccount,omitempty" tf:"kms_key_service_account,omitempty"`
+}
+
+type SourceImageEncryptionKeyParameters struct {
+
+	// The self link of the encryption key that is
+	// stored in Google Cloud KMS.
+	// +kubebuilder:validation:Optional
+	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
+
+	// The service account being used for the
+	// encryption request for the given KMS key. If absent, the Compute Engine
+	// default service account is used.
+	// +kubebuilder:validation:Optional
+	KMSKeyServiceAccount *string `json:"kmsKeyServiceAccount,omitempty" tf:"kms_key_service_account,omitempty"`
+}
+
+type SourceSnapshotEncryptionKeyInitParameters struct {
+
+	// The self link of the encryption key that is
+	// stored in Google Cloud KMS.
+	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
+
+	// The service account being used for the
+	// encryption request for the given KMS key. If absent, the Compute Engine
+	// default service account is used.
+	KMSKeyServiceAccount *string `json:"kmsKeyServiceAccount,omitempty" tf:"kms_key_service_account,omitempty"`
+}
+
+type SourceSnapshotEncryptionKeyObservation struct {
+
+	// The self link of the encryption key that is
+	// stored in Google Cloud KMS.
+	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
+
+	// The service account being used for the
+	// encryption request for the given KMS key. If absent, the Compute Engine
+	// default service account is used.
+	KMSKeyServiceAccount *string `json:"kmsKeyServiceAccount,omitempty" tf:"kms_key_service_account,omitempty"`
+}
+
+type SourceSnapshotEncryptionKeyParameters struct {
+
+	// The self link of the encryption key that is
+	// stored in Google Cloud KMS.
+	// +kubebuilder:validation:Optional
+	KMSKeySelfLink *string `json:"kmsKeySelfLink,omitempty" tf:"kms_key_self_link,omitempty"`
+
+	// The service account being used for the
+	// encryption request for the given KMS key. If absent, the Compute Engine
+	// default service account is used.
+	// +kubebuilder:validation:Optional
+	KMSKeyServiceAccount *string `json:"kmsKeyServiceAccount,omitempty" tf:"kms_key_service_account,omitempty"`
+}
+
+type SpecificReservationInitParameters struct {
+
+	// Corresponds to the label key of a reservation resource. To target a SPECIFIC_RESERVATION by name, specify compute.googleapis.com/reservation-name as the key and specify the name of your reservation as the only value.
+	Key *string `json:"key,omitempty" tf:"key,omitempty"`
+
+	// Corresponds to the label values of a reservation resource.
+	Values []*string `json:"values,omitempty" tf:"values,omitempty"`
+}
+
+type SpecificReservationObservation struct {
+
+	// Corresponds to the label key of a reservation resource. To target a SPECIFIC_RESERVATION by name, specify compute.googleapis.com/reservation-name as the key and specify the name of your reservation as the only value.
+	Key *string `json:"key,omitempty" tf:"key,omitempty"`
+
+	// Corresponds to the label values of a reservation resource.
+	Values []*string `json:"values,omitempty" tf:"values,omitempty"`
+}
+
+type SpecificReservationParameters struct {
+
+	// Corresponds to the label key of a reservation resource. To target a SPECIFIC_RESERVATION by name, specify compute.googleapis.com/reservation-name as the key and specify the name of your reservation as the only value.
+	// +kubebuilder:validation:Optional
+	Key *string `json:"key,omitempty" tf:"key,omitempty"`
+
+	// Corresponds to the label values of a reservation resource.
+	// +kubebuilder:validation:Optional
+	Values []*string `json:"values,omitempty" tf:"values,omitempty"`
 }
 
 // InstanceTemplateSpec defines the desired state of InstanceTemplate

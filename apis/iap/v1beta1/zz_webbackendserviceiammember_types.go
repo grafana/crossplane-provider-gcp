@@ -25,7 +25,7 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
-type WebBackendServiceIAMMemberConditionInitParameters struct {
+type ConditionInitParameters struct {
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
 
 	Expression *string `json:"expression,omitempty" tf:"expression,omitempty"`
@@ -33,7 +33,7 @@ type WebBackendServiceIAMMemberConditionInitParameters struct {
 	Title *string `json:"title,omitempty" tf:"title,omitempty"`
 }
 
-type WebBackendServiceIAMMemberConditionObservation struct {
+type ConditionObservation struct {
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
 
 	Expression *string `json:"expression,omitempty" tf:"expression,omitempty"`
@@ -41,7 +41,7 @@ type WebBackendServiceIAMMemberConditionObservation struct {
 	Title *string `json:"title,omitempty" tf:"title,omitempty"`
 }
 
-type WebBackendServiceIAMMemberConditionParameters struct {
+type ConditionParameters struct {
 
 	// +kubebuilder:validation:Optional
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
@@ -54,7 +54,7 @@ type WebBackendServiceIAMMemberConditionParameters struct {
 }
 
 type WebBackendServiceIAMMemberInitParameters struct {
-	Condition []WebBackendServiceIAMMemberConditionInitParameters `json:"condition,omitempty" tf:"condition,omitempty"`
+	Condition []ConditionInitParameters `json:"condition,omitempty" tf:"condition,omitempty"`
 
 	Member *string `json:"member,omitempty" tf:"member,omitempty"`
 
@@ -64,7 +64,7 @@ type WebBackendServiceIAMMemberInitParameters struct {
 }
 
 type WebBackendServiceIAMMemberObservation struct {
-	Condition []WebBackendServiceIAMMemberConditionObservation `json:"condition,omitempty" tf:"condition,omitempty"`
+	Condition []ConditionObservation `json:"condition,omitempty" tf:"condition,omitempty"`
 
 	Etag *string `json:"etag,omitempty" tf:"etag,omitempty"`
 
@@ -82,7 +82,7 @@ type WebBackendServiceIAMMemberObservation struct {
 type WebBackendServiceIAMMemberParameters struct {
 
 	// +kubebuilder:validation:Optional
-	Condition []WebBackendServiceIAMMemberConditionParameters `json:"condition,omitempty" tf:"condition,omitempty"`
+	Condition []ConditionParameters `json:"condition,omitempty" tf:"condition,omitempty"`
 
 	// +kubebuilder:validation:Optional
 	Member *string `json:"member,omitempty" tf:"member,omitempty"`
