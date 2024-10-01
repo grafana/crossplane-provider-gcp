@@ -1,3 +1,9 @@
+## Archive Notice
+
+As of [October 1, 2024], this fork of the monolithic Upbound provider has been archived. We have completed the [migration to the Upbound family providers](https://github.com/grafana/deployment_tools/issues/162329), which offers a more modular and flexible approach to managing cloud resources. This repository is now read-only, and no further updates will be made here.
+
+For future work, please refer to the individual Upbound family providers.
+
 <!--
 SPDX-FileCopyrightText: 2023 The Crossplane Authors <https://crossplane.io>
 
